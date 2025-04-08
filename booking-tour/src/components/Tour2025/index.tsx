@@ -19,7 +19,7 @@ const tours = [
         image: "https://saigontourist.net/uploads/destination/TrongNuoc/DaNang/Castles-on-the-hill-Ba-Na-Hills_624658109.jpg",
     },
     {
-        id: 2,
+        id: 2, 
         title: "Du Lịch Động Phong Nha - Đồng Thiên Đường - Huế - Đà Nẵng - Hội An - Bà Nà Hills",
         tour: "Đà Nẵng",
         destination: "Huế - Hội An - Đà Nẵng",

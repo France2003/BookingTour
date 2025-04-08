@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { IoReturnDownBack } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { Helmet } from "react-helmet";
 
 const { Option } = Select;
 
@@ -11,7 +12,8 @@ export default function AddTour() {
   const [form] = Form.useForm();
   const [token, setToken] = useState<string | null>(null);
   const [programList, setProgramList] = useState([{ activities: "" }]);
-  const [additionalImages, setAdditionalImages] = useState<string[]>([]);
+  const [additionalImageUrls, setAdditionalImages] = useState<string[]>([""]);
+
   // useEffect để kiểm tra token khi component được mount
   useEffect(() => {
     const storedToken = localStorage.getItem('accessToken'); // Đảm bảo key là 'accessToken'
@@ -23,30 +25,10 @@ export default function AddTour() {
     }
     setToken(storedToken);
   }, []);
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newImages = [...additionalImages];
-    newImages[index] = e.target.value; // Cập nhật giá trị ảnh tại vị trí index
-    setAdditionalImages(newImages); // Cập nhật state mới
-  };
-  const handleAddImage = () => {
-    setAdditionalImages([...additionalImages, ""]); // Thêm một ảnh phụ mới với giá trị trống
-  };
+  useEffect(() => {
+    form.setFieldsValue({ additionalImageUrls });
+  }, [additionalImageUrls, form]);
 
-  const handleRemoveImage = (index: number) => {
-    const newImages = additionalImages.filter((_, i) => i !== index);
-    setAdditionalImages(newImages); // Xóa ảnh khỏi mảng
-  };
-
-  // Hiển thị ảnh nếu URL hợp lệ
-  const renderImagePreview = (imageUrl: string) => {
-    return imageUrl && (
-      <img
-        src={imageUrl}
-        alt="Image preview"
-        style={{ marginTop: "8px", width: "100%", maxHeight: "200px", objectFit: "cover" }}
-      />
-    );
-  };
   const onFinish = async (values: any) => {
     if (!token) {
       notification.error({
@@ -67,7 +49,7 @@ export default function AddTour() {
       }
 
       // Kiểm tra tất cả các giá trị bắt buộc trước khi gửi
-      if (!values.title || !values.tour || !values.tourCode || !values.destination || !values.vehicle || !values.location || !values.duration || !values.price || !values.imageUrl || !values.additionalImages || !values.startDate || !values.endDate || !values.seatsAvailable || !values.region || !values.childPrice || !values.babyPrice || !values.program) {
+      if (!values.title || !values.tour || !values.tourCode || !values.destination || !values.vehicle || !values.location || !values.duration || !values.price || !values.imageUrl || !values.additionalImageUrls || !values.startDate || !values.endDate || !values.seatsAvailable || !values.region || !values.childPrice || !values.babyPrice || !values.program) {
         notification.error({
           message: "Lỗi!",
           description: "Thiếu thông tin tour, vui lòng kiểm tra lại các trường bắt buộc.",
@@ -89,20 +71,33 @@ export default function AddTour() {
         day: index + 1,
         activities: typeof item.activities === "string" ? [item.activities] : item.activities,
       }));
-      const additionalImages = values.additionalImages || [];
-      if (!Array.isArray(additionalImages) || additionalImages.some(img => typeof img !== 'string')) {
+      const additionalImageUrls = values.additionalImageUrls || [];
+      if (!Array.isArray(additionalImageUrls)) {
         notification.error({
           message: "Lỗi!",
-          description: "Danh sách ảnh phụ không hợp lệ.",
+          description: "Danh sách ảnh phụ không phải là một mảng.",
         });
         return;
       }
+      const invalidImageIndex = additionalImageUrls.findIndex(img => typeof img !== 'string' || !img.trim());
+      if (invalidImageIndex !== -1) {
+        notification.error({
+          message: "Lỗi!",
+          description: `Ảnh phụ thứ ${invalidImageIndex + 1} không hợp lệ. Vui lòng kiểm tra lại.`,
+        });
+        return;
+      }
+      if (!values.additionalImageUrls) {
+        values.additionalImageUrls = [];
+      }
+      console.log("Additional Images:", additionalImageUrls);
+
 
       // Format ngày tháng
       const formattedValues = {
         ...values,
         program: programWithDays,
-        additionalImages: values.additionalImages,
+        additionalImageUrls: values.additionalImageUrls,
         startDate: values.startDate ? values.startDate.format("YYYY-MM-DD") : null,
         endDate: values.endDate ? values.endDate.format("YYYY-MM-DD") : null,
         isFeatured: values.isFeatured || false,
@@ -160,6 +155,11 @@ export default function AddTour() {
 
   return (
     <div className="p-6 bg-white shadow-lg rounded-lg max-w-4xl mx-auto">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Thêm Tour</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">Thêm Tour Mới</h2>
 
       <Card variant="outlined" className="shadow-md">
@@ -167,7 +167,7 @@ export default function AddTour() {
           form={form}
           layout="vertical"
           onFinish={onFinish}
-          initialValues={{ discount: 0, isFeatured: false }}
+          initialValues={{ discount: 0, isFeatured: false, additionalImageUrls: [] }}
         >
           <Row gutter={16}>
             {/* Tiêu đề & Mã tour */}
@@ -322,49 +322,56 @@ export default function AddTour() {
                 <Input placeholder="Nhập đường dẫn ảnh..." />
               </Form.Item>
             </Col>
-            <Col span={12}>
-              <Form.Item label="Ảnh phụ" name="additionalImages">
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Ảnh phụ:</h3>
-                  {additionalImages.map((imageUrl, index) => (
-                    <Row gutter={16} key={index}>
-                      <Col span={18}>
-                        <Form.Item
-                          name={['additionalImages', index]} // Đảm bảo tên đúng để Form quản lý mảng
-                          label={`Ảnh ${index + 1}`}
-                          initialValue={imageUrl} // Đảm bảo giá trị ảnh được khởi tạo
-                          rules={[{ required: true, message: `Vui lòng nhập đường dẫn ảnh phụ ${index + 1}` }]}
-                        >
-                          <Input
-                            value={imageUrl}
-                            onChange={(e) => handleImageChange(e, index)} // Cập nhật giá trị hình ảnh khi người dùng nhập
-                            placeholder="Nhập đường dẫn ảnh phụ"
-                          />
-                          {/* Hiển thị ảnh từ URL nếu có */}
-                          {renderImagePreview(imageUrl)}
-                        </Form.Item>
-                      </Col>
-                      <Col span={6} className="flex items-end">
-                        <Button
-                          type="dashed"
-                          icon={<MinusOutlined />}
-                          onClick={() => handleRemoveImage(index)}
-                        >
-                          Xóa
-                        </Button>
-                      </Col>
-                    </Row>
-                  ))}
-                  <Button
-                    type="dashed"
-                    icon={<PlusOutlined />}
-                    onClick={handleAddImage}
-                  >
-                    Thêm ảnh phụ
-                  </Button>
-                </div>
+            <Col span={24}>
+              <Form.Item label="Ảnh phụ">
+                {form.getFieldValue("additionalImageUrls")?.map((_: string, index: number) => (
+                  <Row gutter={16} key={index} align="middle">
+                    <Col span={18}>
+                      <Form.Item
+                        name={["additionalImageUrls", index]}  // 🔄 Đúng với form field
+                        label={`Ảnh ${index + 1}`}
+                        rules={[{ required: true, message: `Vui lòng nhập đường dẫn ảnh phụ ${index + 1}` }]}
+                      >
+                        <Input placeholder="Nhập đường dẫn ảnh phụ..." />
+                      </Form.Item>
+                      {form.getFieldValue("additionalImageUrls")?.[index] && (
+                        <img
+                          src={form.getFieldValue("additionalImageUrls")[index]}
+                          alt="Preview"
+                          style={{ marginTop: "8px", width: "100%", maxHeight: "200px", objectFit: "cover" }}
+                        />
+                      )}
+                    </Col>
+                    <Col span={6}>
+                      <Button
+                        danger
+                        icon={<MinusOutlined />}
+                        onClick={() => {
+                          const updated = additionalImageUrls.filter((_, i) => i !== index);
+                          setAdditionalImages(updated);
+                        }}
+                      >
+                        Xóa
+                      </Button>
+                    </Col>
+                  </Row>
+                ))}
+
+                <Button
+                  type="dashed"
+                  icon={<PlusOutlined />}
+                  onClick={() => {
+                    const newImages = [...additionalImageUrls, ""];
+                    setAdditionalImages(newImages);
+                  }}
+                >
+                  Thêm ảnh phụ
+                </Button>
               </Form.Item>
+
+
             </Col>
+
 
 
             <Col span={24}>

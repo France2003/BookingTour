@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import dayjs from 'dayjs';
 import { IoReturnDownBack } from "react-icons/io5";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { Helmet } from "react-helmet";
 const { Option } = Select;
 export default function EditTourForm() {
     const { id } = useParams();
@@ -41,6 +42,14 @@ export default function EditTourForm() {
                 if (response.data.endDate) {
                     response.data.endDate = dayjs(response.data.endDate);
                 }
+                if (response.data.additionalImageUrls) {
+                    response.data.extraImages = response.data.additionalImageUrls.map((url: string) => ({ url }));
+                }
+                if (response.data.image) {
+                    form.setFieldsValue({ image: response.data.image });
+
+                }
+
 
                 form.setFieldsValue(response.data);
             } catch (error) {
@@ -66,22 +75,30 @@ export default function EditTourForm() {
         }
 
         setLoading(true);
+
         const programWithDays = (values.program || []).map((item: any, index: number) => ({
             day: index + 1,
             activities: typeof item.activities === "string" ? [item.activities] : item.activities,
         }));
+
+        const extraImages = values.extraImages?.map((img: { url: string }) => img.url) || [];
+
         try {
             const formattedValues = {
                 ...values,
                 program: programWithDays,
+                image: values.image,
                 startDate: values.startDate ? values.startDate.format("YYYY-MM-DD") : null,
                 endDate: values.endDate ? values.endDate.format("YYYY-MM-DD") : null,
                 isFeatured: values.isFeatured || false,
                 price: Number(values.price),
-                childPrice: Number(values.childPrice),  // Đảm bảo gửi giá tour trẻ em
-                babyPrice: Number(values.babyPrice),    // Đảm bảo gửi giá tour em bé
+                childPrice: Number(values.childPrice),
+                babyPrice: Number(values.babyPrice),
                 seatsAvailable: Number(values.seatsAvailable),
+                additionalImageUrls: extraImages, // 👈 thêm dòng này
             };
+
+            delete formattedValues.extraImages; // 👈 Xoá để không gửi sai cấu trúc
 
             const response = await axios.put(`http://localhost:3001/api/tours/${id}`, formattedValues, {
                 headers: {
@@ -92,7 +109,7 @@ export default function EditTourForm() {
 
             notification.success({
                 message: "Thành công!",
-                description: `Tour "${values.title}" đã được cập nhật thành công!`,
+                description: `Tour "${values.tour}" đã được cập nhật thành công!`,
             });
 
             form.resetFields();
@@ -108,8 +125,15 @@ export default function EditTourForm() {
     };
 
 
+
+
     return (
         <div className="p-6 bg-white shadow-lg rounded-lg max-w-4xl mx-auto">
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>Sửa Tour </title>
+                <link rel="canonical" href="http://mysite.com/example" />
+            </Helmet>
             <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">Chỉnh Sửa Tour</h2>
             <Card variant="outlined" className="shadow-md">
                 <Form
@@ -267,8 +291,41 @@ export default function EditTourForm() {
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label="Ảnh tour" name="imageUrl" rules={[{ required: true, message: "Vui lòng nhập đường dẫn ảnh!" }]}>
+                            <Form.Item label="Ảnh tour" name="image" rules={[{ required: true, message: "Vui lòng nhập đường dẫn ảnh!" }]}>
                                 <Input placeholder="Nhập đường dẫn ảnh..." />
+                            </Form.Item>
+                        </Col>
+
+
+                        <Col span={24}>
+                            <Form.Item label="Ảnh phụ">
+                                <Form.List name="extraImages">
+                                    {(fields, { add, remove }) => (
+                                        <>
+                                            {fields.map(({ key, name, ...restField }) => (
+                                                <Row key={key} gutter={16} align="middle">
+                                                    <Col span={22}>
+                                                        <Form.Item
+                                                            {...restField}
+                                                            name={[name, "url"]}
+                                                            rules={[{ required: true, message: "Vui lòng nhập URL ảnh phụ!" }]}
+                                                        >
+                                                            <Input placeholder="Nhập URL ảnh phụ..." />
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={2}>
+                                                        <Button danger icon={<MinusOutlined />} onClick={() => remove(name)} />
+                                                    </Col>
+                                                </Row>
+                                            ))}
+                                            <Form.Item>
+                                                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                    Thêm ảnh phụ
+                                                </Button>
+                                            </Form.Item>
+                                        </>
+                                    )}
+                                </Form.List>
                             </Form.Item>
                         </Col>
                         {/* Chương trình tour */}

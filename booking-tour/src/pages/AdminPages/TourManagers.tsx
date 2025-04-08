@@ -4,6 +4,7 @@ import axios from "axios";
 import { FaPlus, FaEdit, FaTrash, FaSearch, FaCheck, FaEye } from "react-icons/fa";
 import { Modal, message } from "antd";
 import TourStatus from "./TourStatus";
+import { Helmet } from "react-helmet";
 
 // 🟢 1️⃣ Định nghĩa kiểu dữ liệu Tour
 interface Tour {
@@ -92,6 +93,11 @@ export default function TourManagement() {
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       {/* Header */}
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Quản Lí Tour</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Quản Lý Tour</h1>
         <Link
@@ -122,7 +128,7 @@ export default function TourManagement() {
           <thead>
             <tr className="bg-blue-600 text-white text-sm">
               <th className="p-3 text-center">STT</th>
-              <th className="p-3">Tiêu đề</th>
+              <th className="p-3">Tên tour</th>
               <th className="p-3">Ngày khởi hành</th>
               <th className="p-3">Ngày kết thúc</th>
               <th className="p-3">Ngày & giờ thêm</th>

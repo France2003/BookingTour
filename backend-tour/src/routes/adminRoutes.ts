@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/stats", async (req: Request, res: Response) => {
     try {
         // Lấy tổng số người dùng
-        const totalUsers = await User.countDocuments();
+        const totalUsers = await User.countDocuments({ role: "user" });
 
         // Lấy tổng số tour
         const totalTours = await Tour.countDocuments();

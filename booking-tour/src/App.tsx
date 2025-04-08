@@ -14,6 +14,9 @@ import TourManagement from './pages/AdminPages/TourManagers'
 import AddTourForm from './pages/AdminPages/AddTourForm'
 import EditTourForm from './pages/AdminPages/EditTourForm'
 import ViewTour from './pages/AdminPages/ViewTour'
+import UserList from './pages/AdminPages/UserList'
+import UserInfoPage from './pages/UserPages/UserInfoPage'
+import ViewUser from './pages/AdminPages/ViewUser'
 function App() {
   return (
     <>
@@ -30,9 +33,12 @@ function App() {
           <Route path='/' element={<DefaultLayout />}>
             <Route index element={<HomePage />}/>  
           </Route>
+          <Route path="/users/:id" element={<UserInfoPage />} />
           <Route path='/admin' element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="tours" element={<TourManagement />} />
+            <Route path="users" element={<UserList />} />
+            <Route path="users/view/:id" element={<ViewUser />} />
             <Route path="tours/add" element={<AddTourForm />} />
             <Route path="tours/view/:id" element={<ViewTour/>} />
             <Route path="tours/edit/:id" element={<EditTourForm />} />

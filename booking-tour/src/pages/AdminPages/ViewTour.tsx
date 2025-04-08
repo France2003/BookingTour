@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { notification, Card, Descriptions, Spin } from 'antd';
 import { IoReturnDownBack } from 'react-icons/io5';
+import { Helmet } from 'react-helmet';
 export default function ViewTour() {
     const { id } = useParams(); // Lấy tourId từ URL
     const [tour, setTour] = useState<any>(null);
@@ -45,11 +46,16 @@ export default function ViewTour() {
 
     return (
         <div className="p-6 bg-white shadow-lg rounded-lg max-w-4xl mx-auto">
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>Xem chi tiết tour {tour.tour}</title>
+                <link rel="canonical" href="http://mysite.com/example" />
+            </Helmet>
             <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">Chi Tiết Tour</h2>
             <Card title="Thông Tin Tour" bordered={false}>
                 <Descriptions column={2} bordered>
                     <Descriptions.Item label="Mã Tour">{tour.tourCode}</Descriptions.Item>
-                    <Descriptions.Item label="Tiêu Đề">{tour.title}</Descriptions.Item>
+                    <Descriptions.Item label="Tiêu Đề">{tour.tour}</Descriptions.Item>
                     <Descriptions.Item label="Ngày $ Giờ Thêm">
                         {new Date(tour.createdAt).toLocaleString("vi-VN", {
                             day: "2-digit",
@@ -109,7 +115,28 @@ export default function ViewTour() {
                             <p>Không có ảnh</p>
                         )}
                     </Descriptions.Item>
+                    <Descriptions.Item label="Ảnh Phụ" span={2}>
+                        {tour.additionalImageUrls && tour.additionalImageUrls.length > 0 ? (
+                            <div className="flex flex-wrap gap-4 mt-2">
+                                {tour.additionalImageUrls.map((url: string, idx: number) => (
+                                    <img
+                                        key={idx}
+                                        src={url}
+                                        alt={`Ảnh phụ ${idx + 1}`}
+                                        className="w-32 h-32 object-cover rounded border"
+                                        onError={(e) => {
+                                            e.currentTarget.src = "https://via.placeholder.com/150";
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <p>Không có ảnh phụ</p>
+                        )}
+                    </Descriptions.Item>
+
                 </Descriptions>
+
                 <h3 className="text-xl font-bold mt-6">Chương Trình Tour</h3>
                 <div className="mt-4">
                     {tour.program && tour.program.length > 0 ? (

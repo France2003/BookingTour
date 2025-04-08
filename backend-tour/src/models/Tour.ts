@@ -19,7 +19,7 @@ export interface ITour extends Document {
     price: number;
     discount?: number; // Giảm giá (%)
     image: string;
-    additionalImages?: string,
+    additionalImageUrls: string,
     rating?: number; // Trung bình đánh giá
     reviews?: { user: string; comment: string; rating: number }[]; // Danh sách nhận xét
     startDate: Date; // Ngày bắt đầu
@@ -45,7 +45,7 @@ const TourSchema = new Schema<ITour>(
         price: { type: Number, required: true },
         discount: { type: Number, default: 0 }, // Giảm giá mặc định là 0
         image: { type: String, required: true },
-        additionalImages: { type: String, required: true },
+        additionalImageUrls: [{ type: String }],
         rating: { type: Number, default: 5 }, // Mặc định đánh giá 5 sao
         reviews: [
             {

@@ -26,7 +26,6 @@ export const createAdminAccount = async (): Promise<void> => {
             email: adminEmail,
             password: hashedPassword,
             role: "admin",
-            phone: "0000000000",
         });
 
         await newAdmin.save();

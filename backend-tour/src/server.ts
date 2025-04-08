@@ -25,7 +25,7 @@ const connectToMongo = async (): Promise<void> => {
     }
 };
 connectToMongo();
-
+createAdminAccount(); 
 console.log("Connected to MongoDB", process.env.MONGO_DB);
 app.use(express.json());
 app.use(cors({

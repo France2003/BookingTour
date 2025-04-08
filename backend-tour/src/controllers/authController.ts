@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import UserModel, { IUser } from "../models/UserModel";
 import User from "../models/UserModel";
+import { Booking } from "../models/Booking"; 
 // Đăng ký
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -91,18 +92,69 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ error: (error as Error).message });
     }
 };
-
-
-// interface AuthRequest extends Request {
-//     user?: { id: string };
-// }
 export const getUsers = async (req: Request, res: Response) => {
     try {
-        const users = await User.find(); // Lấy tất cả user từ MongoDB
+        const users = await User.find({ role: "user" }); // ✅ Chỉ lấy user thường
         res.status(200).json(users); // Trả về danh sách user
     } catch (error) {
         res.status(500).json({ error: "Lỗi khi lấy danh sách người dùng!" });
     }
 };
+
+export const getUserById = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userId = req.params.id;
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            res.status(404).json({ message: "Người dùng không tồn tại!" });
+            return
+        }
+        // Lấy lịch sử đặt tour
+        const bookings = await Booking.find({ userId })
+        .populate("tourId", "title") // populate tên tour
+        .sort({ date: -1 })          // mới nhất trước
+        .lean();
+        res.status(200).json({user, bookings});
+        return
+    } catch (error) {
+        res.status(500).json({ message: "Lỗi server!", error });
+        return
+    }
+};
+export const updateUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+        const { name, phone, email, birthdate, gender, address, city, avatar } = req.body;
+
+        const updated = await UserModel.findByIdAndUpdate(
+            id,
+            {
+                name,
+                phone,
+                email,
+                birthdate,  // ngày sinh
+                gender,     // giới tính
+                address,    // địa chỉ cụ thể
+                city,       // thành phố
+                avatar,     // ảnh đại diện
+            },
+            { new: true }
+        );
+
+        if (!updated) {
+            res.status(404).json({ message: "Không tìm thấy người dùng để cập nhật!" });
+            return;
+        }
+
+        res.status(200).json({ message: "Cập nhật thành công", user: updated });
+    } catch (error) {
+        res.status(500).json({ message: "Lỗi khi cập nhật người dùng" });
+    }
+};
+
+
+
+
+
 
 

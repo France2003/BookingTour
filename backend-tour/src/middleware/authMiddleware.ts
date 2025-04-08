@@ -30,6 +30,7 @@ export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction)
         const decoded = jwt.verify(token, process.env.JWT_SECRET) as { id: string; role: string };
         console.log("✅ Token hợp lệ! User ID:", decoded.id, "Role:", decoded.role);
         req.user = decoded;  // Gắn thông tin người dùng vào request
+        
         next();  // Tiến hành với request tiếp theo
     } catch (error) {
         console.error("❌ Lỗi xác thực token:", error);

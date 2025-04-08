@@ -4,6 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recha
 import { FaUsers, FaShoppingCart, FaMoneyBillWave, FaSuitcase } from "react-icons/fa";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
@@ -58,6 +59,11 @@ export default function AdminDashboard() {
 
   return (
     <div className="flex h-screen bg-gray-100">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Admin Dashboard</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       {/* Main Content */}
       <div className="flex-1 p-6">
         <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
@@ -68,7 +74,7 @@ export default function AdminDashboard() {
               <h2 className="text-2xl font-bold">${stats.revenue.toLocaleString()}</h2>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-green-100 flex items-center p-4">
             <FaUsers className="text-4xl text-green-600" />
             <CardContent>
@@ -76,7 +82,7 @@ export default function AdminDashboard() {
               <h2 className="text-2xl font-bold">{stats.totalUsers}</h2>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-yellow-100 flex items-center p-4">
             <FaShoppingCart className="text-4xl text-yellow-600" />
             <CardContent>
@@ -84,7 +90,7 @@ export default function AdminDashboard() {
               <h2 className="text-2xl font-bold">{stats.totalBookings}</h2>
             </CardContent>
           </Card>
-          
+
           <Card className="bg-red-100 flex items-center p-4">
             <FaSuitcase className="text-4xl text-red-600" />
             <CardContent>
