@@ -1,3 +1,7 @@
 1. api get users: http://localhost:3001/api/auth/users
 2. api post register: http://localhost:3001/api/auth/register
 2. api post login: http://localhost:3001/api/auth/login
+3.api post tour: http://localhost:3001/api/tours
+4.api get tour: http://localhost:3001/api/tours
+5.api get id Tour: http://localhost:3001/api/tours/${id}
+6.api get id User: http://localhost:3001/api/auth/users/${id}

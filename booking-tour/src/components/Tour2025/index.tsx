@@ -5,80 +5,30 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { motion } from "framer-motion"
-const tours = [
-    {
-        id: 1,
-        title: "Du Lịch Đà Nẵng - Hội An - Bà Nà - Cầu Vàng - Suối Khoáng Nóng Thần Tài",
-        tour: "Hồ Chí Minh",
-        destination: "Hội An - Đà Nẵng",
-        vehicle: "Hàng không Vietnam Airlines",
-        location: "TP. Hồ Chí Minh",
-        duration: "3 ngày 2 đêm",
-        price: "6.490.000đ",
-        image: "https://saigontourist.net/uploads/destination/TrongNuoc/DaNang/Castles-on-the-hill-Ba-Na-Hills_624658109.jpg",
-    },
-    {
-        id: 2, 
-        title: "Du Lịch Động Phong Nha - Đồng Thiên Đường - Huế - Đà Nẵng - Hội An - Bà Nà Hills",
-        tour: "Đà Nẵng",
-        destination: "Huế - Hội An - Đà Nẵng",
-        vehicle: "Hàng không Vietnam Airlines",
-        location: "Đà Nẵng",
-        duration: "5 ngày 4 đêm",
-        price: "12.490.000đ",
-        image: "https://saigontourist.net/uploads/destination/TrongNuoc/Quangbinh/Thien-Duong-cave_654445999.jpg",
-    },
-    {
-        id: 3,
-        title: "Du Lịch Phan Thiết - Mũi Né - Lâu Đài Rượu Vang - Trung Tâm Bùn Khoáng",
-        tour: "Hồ Chí Minh",
-        destination: "Phan Thiết",
-        vehicle: "Xe tham quan 16, 29, 35, 45",
-        location: "TP. Hồ Chí Minh",
-        duration: "2 ngày 1 đêm",
-        price: "3.590.000đ",
-        image: "https://www.saigontourist.net/uploads/destination/TrongNuoc/Phanthiet/Mui-Ne-Beach-Vietnam_380449951.jpg",
-    },
-    {
-        id: 4,
-        title: "Du Lịch Hải Phòng – Vịnh Hạ Long – Khám Phá Tàu La Casta 5*",
-        tour: "Hải Phòng",
-        destination: "Hạ Long",
-        vehicle: "Đi về bằng xe",
-        location: "Hải Phòng",
-        duration: "2 ngày 1 đêm",
-        price: "1.890.000đ",
-        image: "https://www.saigontourist.net/uploads/destination/TrongNuoc/Halong/Halong-Bay-Vietnam_433429624.jpg",
-    },
-    {
-        id: 5,
-        title: "Du Lịch Liên Tuyến Nha Trang - Phú Yên - Quy Nhơn - Hội An - Đà Nẵng - Huế - Măng Đen - Buôn Ma Thuột [Sự Kiện Sinh Nhật 50 Năm]",
-        tour: "Hồ Chí Minh",
-        destination: "Huế - Tuy Hoà - Quy Nhơn - Đà Nẵng - Nha Trang - Tây Nguyên",
-        vehicle: "Đi về bằng xe",
-        location: "Hồ Chí Minh",
-        duration: "11 ngày 10 đêm",
-        price: "13.150.000",
-        image: "https://www.saigontourist.net/uploads/destination/TrongNuoc/QuyNhon/EoGio-beach-QuyNhon-BinhDinh-Vietnam-_479390470.jpg",
-    },
-    {
-        id: 6,
-        title: "Du Lịch Hà Giang – Đồng Văn – Hồ Ba Bể – Cao Bằng – Bản Giốc – Lạng Sơn [Lễ 30/04]",
-        tour: "Hồ Chí Minh",
-        destination: "Đông Bắc",
-        vehicle: "Hàng không Vietnam Airlines",
-        location: "Hồ Chí Minh",
-        duration: "6 ngày 5 đêm",
-        price: "14.179.000đ",
-        image: "https://saigontourist.net/uploads/destination/TrongNuoc/Caobang-BacCan/Ban-Gioc-waterfall-in-Cao-Bang_222378442.jpg",
-    },
-];
+import { motion } from "framer-motion";
+import axios from "axios";  // Import axios
 
 const TourNew = () => {
     const prevRef = useRef<HTMLButtonElement | null>(null);
     const nextRef = useRef<HTMLButtonElement | null>(null);
     const [swiperInstance, setSwiperInstance] = useState<any>(null);
+    const [tours, setTours] = useState<any[]>([]); // State to store tours fetched from the API
+
+    // Fetch tours from the API using axios
+    useEffect(() => {
+        const fetchTours = async () => {
+            try {
+                const response = await axios.get("http://localhost:3001/api/tours", {
+                    params: { isFeatured: true } // Send `isFeatured=true` as a query parameter
+                });
+                setTours(response.data); // Update state with the fetched tours
+            } catch (error) {
+                console.error("Error fetching tours:", error);
+            }
+        };
+        fetchTours();
+    }, []); // Run once when the component mounts
+
     useEffect(() => {
         if (swiperInstance && prevRef.current && nextRef.current) {
             swiperInstance.params.navigation.prevEl = prevRef.current;
@@ -87,16 +37,16 @@ const TourNew = () => {
             swiperInstance.navigation.update();
         }
     }, [swiperInstance]);
+
     return (
         <section className="container mx-auto px-6 py-12 relative">
-            {/* Phần Giới Thiệu */}
             <motion.div
                 initial={{ opacity: 0, y: 50 }}  // Bắt đầu ẩn và dịch xuống 50px
                 whileInView={{ opacity: 1, y: 0 }} // Khi vào màn hình, xuất hiện từ dưới lên
                 transition={{ duration: 0.8, ease: "easeOut" }} // Hiệu ứng mượt
                 viewport={{ once: true }} // Chỉ chạy 1 lần
                 className="mb-10 px-[80px]"
-            > 
+            >
                 <h2 className="text-3xl font-bold text-blue-700">
                     Chào mừng bạn đến với Đình Pháp – Cánh cửa mở ra những chuyến hành trình đáng nhớ!
                 </h2>
@@ -109,7 +59,7 @@ const TourNew = () => {
                     Đặt chuyến tham quan ngay hôm nay và bắt đầu hành trình khám phá thế giới theo cách riêng của bạn!
                 </p>
             </motion.div>
-            <h3 className="text-3xl font-bold text-center text-blue-600 mb-6">TOUR MỚI 2025</h3>
+            <h3 className="text-3xl font-bold text-center text-blue-600 mb-6">TOUR NỔI BẬT</h3>
             <button
                 ref={prevRef}
                 className="absolute left-[55px] top-[500px] transform -translate-y-1/2 z-10 p-2 bg-gray-200 rounded-full shadow-lg hover:bg-gray-400 transition"
@@ -122,7 +72,6 @@ const TourNew = () => {
                 whileInView={{ opacity: 1, y: 0 }} // Khi vào màn hình, xuất hiện từ dưới lên
                 transition={{ duration: 0.8, ease: "easeOut" }} // Hiệu ứng mượt
                 viewport={{ once: true }} // Chỉ chạy 1 lần
-
             >
                 <Swiper
                     modules={[Navigation, Pagination]}
@@ -138,29 +87,46 @@ const TourNew = () => {
                 >
                     {tours.map((tour) => (
                         <SwiperSlide key={tour.id} className="flex mb-5 px-[50px] justify-center">
-                            <div className="bg-white shadow-lg rounded-lg overflow-hidden w-[400px] h-[400px] relative">
-                                <img src={tour.image} alt={tour.title} className="w-full h-52 object-cover" />
-                                <div className="absolute top-3 right-[-3px]  bg-orange-500 opacity-90 text-white text-right text-[13px] font-bold px-3 py-2 rounded-lg shadow-md">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}  // Hình ảnh bắt đầu mờ và nhỏ
+                                whileInView={{ opacity: 1, scale: 1 }} // Hình ảnh phóng to và mờ dần
+                                transition={{ duration: 0.8, ease: "easeOut" }}
+                                className="bg-white shadow-lg rounded-lg overflow-hidden w-[400px] h-[400px] relative group"
+                            >
+                                <div className="overflow-hidden rounded-t-lg">
+                                    <img
+                                        src={tour.image}
+                                        alt={tour.title}
+                                        className="w-full h-[250px] object-cover transform transition duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:scale-115"
+                                    />
+                                </div>
+
+                                <div className="absolute top-3 right-[-3px] bg-orange-400 opacity-95 text-white text-right text-[13px] font-bold px-3 py-2 rounded-lg shadow-md">
                                     Giá từ <br />
-                                    <span className="">{tour.price}</span> <br />
-                                    <span className="">{tour.duration}</span>
+                                    <span>{tour.price}</span> <br />
+                                    <span>{tour.duration}</span>
                                 </div>
                                 <div className="p-4">
                                     <div className="flex justify-between text-gray-600 text-sm italic">
-                                        <div>
-                                            <p><span className="font-semibold">Tour:</span> {tour.tour}</p>
-                                            <p className=" pt-[10px]"><span className="font-semibold">Điểm xuất phát:</span> {tour.location}</p>
+                                        <div className="flex flex-col space-y-3 w-[48%]"> {/* Chiếm gần nửa chiều rộng */}
+                                            <p className="w-full truncate "><span className="font-semibold ">Tour:</span> {tour.tour}</p>
+                                            <p className="w-full truncate"><span className="font-semibold">Điểm xuất phát:</span> {tour.location}</p>
                                         </div>
-                                        <div className="text-right">
-                                            <p><span className="font-semibold">Phương tiện:</span> {tour.vehicle} </p>
-                                            <p className="truncate w-[200px] pt-[10px] "><span className="font-semibold">Điểm đến:</span> {tour.destination} </p>
+                                        <div className="flex flex-col space-y-3 w-[48%]">
+                                            <p className="w-full truncate"><span className="font-semibold">Phương tiện:</span> {tour.vehicle}</p>
+                                            <p className="w-full truncate"><span className="font-semibold">Điểm đến:</span> {tour.destination}</p>
                                         </div>
                                     </div>
-                                    <h4 className="text-blue-600 text-[17px]  font-medium mt-2">
+                                    <motion.h4
+                                        initial={{ opacity: 0, y: 20 }}  // Tiêu đề bắt đầu ẩn và dịch lên
+                                        whileInView={{ opacity: 1, y: 0 }}  // Tiêu đề hiện lên
+                                        transition={{ duration: 0.8, ease: "easeOut" }}
+                                        className="text-blue-600 text-[17px] font-medium mt-2 text-ellipsis overflow-hidden"
+                                    >
                                         {tour.title}
-                                    </h4>
+                                    </motion.h4>
                                 </div>
-                            </div>
+                            </motion.div>
                         </SwiperSlide>
                     ))}
                 </Swiper>

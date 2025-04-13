@@ -9,7 +9,7 @@ import { Helmet } from "react-helmet";
 // 🟢 1️⃣ Định nghĩa kiểu dữ liệu Tour
 interface Tour {
   _id: string;  // Sử dụng _id kiểu string cho MongoDB ObjectId
-  tour: string;
+  title: string;
   startDate: string;
   endDate: string;
   createdAt: string;
@@ -86,7 +86,7 @@ export default function TourManagement() {
   }
   // Lọc danh sách tour theo tiêu đề (hoặc thêm các trường khác nếu muốn)
   const filteredTours = tours.filter((tour) =>
-    tour.tour.toLowerCase().includes(search.toLowerCase())
+    tour.title.toLowerCase().includes(search.toLowerCase())
   );
 
 
@@ -141,7 +141,7 @@ export default function TourManagement() {
               filteredTours.map((tour, index) => (
                 <tr key={tour._id} className="border-b hover:bg-gray-100 text-sm">
                   <td className="p-3 text-center font-semibold">{index + 1}</td>
-                  <td className="p-3">{tour.tour}</td>
+                  <td className="p-3">{tour.title}</td>
                   <td className="p-3">{new Date(tour.startDate).toLocaleDateString("vi-VN")}</td>
                   <td className="p-3">{new Date(tour.endDate).toLocaleDateString("vi-VN")}</td>
                   <td className="p-3">

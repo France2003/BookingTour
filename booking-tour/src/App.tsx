@@ -17,6 +17,11 @@ import ViewTour from './pages/AdminPages/ViewTour'
 import UserList from './pages/AdminPages/UserList'
 import UserInfoPage from './pages/UserPages/UserInfoPage'
 import ViewUser from './pages/AdminPages/ViewUser'
+import TourMienBacPage from './pages/TourMienBacPage/TourMienBacPage'
+import TourDetailPage from './pages/TourDetailPage/TourDetailPage'
+import TourMienTrungPage from './pages/TourMienTrungPage/TourMienTrungPage'
+import TourMienNamPage from './pages/TourMienNamPage/TourMienNamPage'
+import TourPage from './components/TourPage/TourPages'
 function App() {
   return (
     <>
@@ -32,6 +37,11 @@ function App() {
           </Route>
           <Route path='/' element={<DefaultLayout />}>
             <Route index element={<HomePage />}/>  
+            <Route path="/tour-mien-bac" element={<TourMienBacPage />} />
+            <Route path="/tour-mien-bac/:tourCode" element={<TourDetailPage />} />
+            <Route path="/tour/:region/:item" element={<TourPage />} />
+            <Route path="/tour-mien-trung" element={<TourMienTrungPage />} />
+            <Route path="/tour-mien-nam" element={<TourMienNamPage />} />
           </Route>
           <Route path="/users/:id" element={<UserInfoPage />} />
           <Route path='/admin' element={<AdminLayout />}>

@@ -109,12 +109,16 @@ const Header = () => {
                   >
                     {region.items.map((item, index) => (
                       <li key={index} className="px-4 py-2 hover:bg-gray-200 cursor-pointer">
-                        <Link to={`/${region.slug}/${item.toLowerCase().replace(/\s+/g, "-")}`} className="text-black">
+                        <Link
+                          to={`/tour/${encodeURIComponent(region.slug)}/${encodeURIComponent(item.toLowerCase().replace(/\s+/g, "-"))}`}
+                          className="text-black"
+                        >
                           {item}
                         </Link>
                       </li>
                     ))}
                   </ul>
+
                 </div>
               ))}
               <Link to="/"><NavbarItem label="Trải nghiệm" /></Link>

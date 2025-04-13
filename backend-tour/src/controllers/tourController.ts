@@ -5,7 +5,7 @@ import Tour from "../models/Tour";
 // ✅ Lấy danh sách tour
 export const getTours = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { region, search } = req.query;
+        const { region, search, isFeatured, location } = req.query;
 
         let filter: any = {};
 
@@ -13,7 +13,15 @@ export const getTours = async (req: Request, res: Response): Promise<void> => {
         if (region) {
             filter.region = region;
         }
-
+        //
+        if (location) {
+            filter.location = { $regex: new RegExp(location as string, 'i') }; // Điều chỉnh để tìm kiếm bất kỳ chuỗi nào chứa tên location
+        }
+        
+        // ✅ Lọc theo tour nổi bật
+        if (isFeatured !== undefined) {
+            filter.isFeatured = isFeatured === 'true';
+        }
         // ✅ Tìm kiếm theo từ khóa (tiêu đề, địa điểm, nơi đến)
         if (search) {
             filter.$or = [
@@ -32,6 +40,7 @@ export const getTours = async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ message: "Lỗi server", error });
     }
 };
+//
 // ✅ Lấy tour theo ID
 export const getTourById = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -51,8 +60,6 @@ export const getTourById = async (req: Request, res: Response): Promise<void> =>
         res.status(500).json({ message: "Lỗi server", error });
     }
 };
-
-
 // ✅ Thêm tour mới (Chỉ admin)
 export const createTour = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -60,11 +67,13 @@ export const createTour = async (req: Request, res: Response): Promise<void> => 
         const {
             title,
             tour,
+            isFeatured,
             tourCode,
             destination,
             vehicle,
             location,
             duration,
+            highlights,
             price,
             imageUrl,
             additionalImageUrls, // ✅ Đổi tên từ additionalImages
@@ -85,6 +94,9 @@ export const createTour = async (req: Request, res: Response): Promise<void> => 
         if (!vehicle) missingFields.push('vehicle');
         if (!location) missingFields.push('location');
         if (!duration) missingFields.push('duration');
+        if (!highlights || !Array.isArray(highlights) || highlights.length === 0) {
+            missingFields.push('highlights');
+        }
         if (!price) missingFields.push('price');
         if (!imageUrl) missingFields.push('imageUrl');
         if (!additionalImageUrls || !Array.isArray(additionalImageUrls) || additionalImageUrls.length === 0)
@@ -120,6 +132,11 @@ export const createTour = async (req: Request, res: Response): Promise<void> => 
             res.status(400).json({ message: "Giá, số ghế, giá trẻ em và giá em bé phải là số" });
             return;
         }
+        // ✅ Validate "tour nổi bật" phải trong năm 2025
+        if (isFeatured && formattedStartDate.getFullYear() !== 2025) {
+            res.status(400).json({ message: "Tour nổi bật phải có ngày khởi hành trong năm 2025." });
+            return;
+        }
 
         let discount = 0;
         const currentYear = new Date().getFullYear();
@@ -130,11 +147,13 @@ export const createTour = async (req: Request, res: Response): Promise<void> => 
         const newTour = new Tour({
             title,
             tour,
+            isFeatured,
             tourCode,
             destination,
             vehicle,
             location,
             duration,
+            highlights,
             price: formattedPrice,
             discount,
             image: imageUrl,
@@ -156,8 +175,6 @@ export const createTour = async (req: Request, res: Response): Promise<void> => 
         res.status(500).json({ message: "Lỗi server!", error });
     }
 };
-
-
 // ✅ Cập nhật tour
 export const updateTour = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -234,7 +251,6 @@ export const updateTourStatus = async (req: Request, res: Response): Promise<voi
         res.status(500).json({ message: "Lỗi khi cập nhật trạng thái tour", error });
     }
 };
-
 // ✅ Xóa tour
 export const deleteTour = async (req: Request, res: Response): Promise<void> => {
     try {

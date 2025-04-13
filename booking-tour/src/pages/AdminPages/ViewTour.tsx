@@ -72,13 +72,10 @@ export default function ViewTour() {
 
                     <Descriptions.Item label="Nơi Đến">{tour.destination}</Descriptions.Item>
                     <Descriptions.Item label="Thời Gian">{tour.duration}</Descriptions.Item>
-
                     <Descriptions.Item label="Giá Tour">{tour.price.toLocaleString()} VNĐ</Descriptions.Item>
                     <Descriptions.Item label="Giá Trẻ Em">{tour.childPrice.toLocaleString()} VNĐ</Descriptions.Item>
-
                     <Descriptions.Item label="Giá Trẻ Sơ Sinh">{tour.babyPrice.toLocaleString()} VNĐ</Descriptions.Item>
                     <Descriptions.Item label="Giảm Giá">{tour.discount}%</Descriptions.Item>
-
                     <Descriptions.Item label="Ngày Khởi Hành">
                         {new Date(tour.startDate).toLocaleString("vi-VN", {
                             day: "2-digit",
@@ -97,10 +94,8 @@ export default function ViewTour() {
                     </Descriptions.Item>
                     <Descriptions.Item label="Số Chỗ">{tour.seatsAvailable}</Descriptions.Item>
                     <Descriptions.Item label="Vùng Miền">{tour.region}</Descriptions.Item>
-
                     <Descriptions.Item label="Trạng Thái">{tour.status}</Descriptions.Item>
-                    <Descriptions.Item label="Tour Nổi Bật">{tour.isFeatured ? 'Có' : 'Không'}</Descriptions.Item>
-
+                    <Descriptions.Item label="Tour Nổi Bật Của Năm 2025">{tour.isFeatured ? 'Có' : 'Không'}</Descriptions.Item>
                     <Descriptions.Item label="Ảnh Tour" span={2}>
                         {tour.image ? (
                             <img
@@ -134,9 +129,8 @@ export default function ViewTour() {
                             <p>Không có ảnh phụ</p>
                         )}
                     </Descriptions.Item>
-
+                    <Descriptions.Item label="Tour Này Có Gì Hay? ">{tour.highlights}</Descriptions.Item>
                 </Descriptions>
-
                 <h3 className="text-xl font-bold mt-6">Chương Trình Tour</h3>
                 <div className="mt-4">
                     {tour.program && tour.program.length > 0 ? (

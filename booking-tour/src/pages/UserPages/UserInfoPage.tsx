@@ -53,7 +53,7 @@ const UserInfoPage = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto mt-12 bg-white shadow-md p-8 rounded-lg">
+    <div className="max-w-5xl  mx-auto mt-12 bg-white shadow-md p-8 rounded-lg">
       <h2 className="text-3xl font-semibold mb-8 text-center">Hồ Sơ Người Dùng</h2>
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

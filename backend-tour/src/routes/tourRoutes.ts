@@ -6,7 +6,8 @@ const router = express.Router();
 
 // ✅ Lấy danh sách tour
 router.get("/", getTours);
-
+//
+// router.get("/location/:slug", getToursByLocation); 
 // ✅ Thêm tour mới (Chỉ admin)
 router.post("/", verifyToken, isAdmin, createTour);
 
@@ -16,4 +17,5 @@ router.put("/:id", verifyToken, isAdmin, updateTour);
 // ✅ Xóa tour (Chỉ admin)
 router.delete("/:id", verifyToken, isAdmin, deleteTour);
 router.patch('/:id/status', updateTourStatus);
+
 export default router;

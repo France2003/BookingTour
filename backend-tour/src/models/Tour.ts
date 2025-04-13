@@ -11,12 +11,14 @@ interface IProgram {
 export interface ITour extends Document {
     title: string;
     tour: string;
+    isFeatured?: boolean;
     tourCode: string;
     destination: string;
     vehicle: string;
     location: string;
     duration: string;
     price: number;
+    highlights: string[]
     discount?: number; // Giảm giá (%)
     image: string;
     additionalImageUrls: string,
@@ -37,11 +39,16 @@ const TourSchema = new Schema<ITour>(
     {
         title: { type: String, required: true },
         tour: { type: String, required: true },
+        isFeatured: { type: Boolean, default: false },
         tourCode: { type: String, unique: true, required: true },
         destination: { type: String, required: true },
         vehicle: { type: String, required: true },
         location: { type: String, required: true },
         duration: { type: String, required: true },
+        highlights: {
+            type: [String], // 👈 Chuyển sang mảng string
+            required: true,
+          },    
         price: { type: Number, required: true },
         discount: { type: Number, default: 0 }, // Giảm giá mặc định là 0
         image: { type: String, required: true },

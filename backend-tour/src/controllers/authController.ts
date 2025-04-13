@@ -35,7 +35,6 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     }
 };
 // Đăng nhập
-// Đăng nhập
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
     try {
         console.log("🔍 Request body:", req.body); // ✅ Kiểm tra dữ liệu nhận từ FE
@@ -100,7 +99,6 @@ export const getUsers = async (req: Request, res: Response) => {
         res.status(500).json({ error: "Lỗi khi lấy danh sách người dùng!" });
     }
 };
-
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.params.id;
@@ -151,6 +149,22 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
         res.status(500).json({ message: "Lỗi khi cập nhật người dùng" });
     }
 };
+export const deleteUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { id } = req.params;
+
+        const deletedUser = await UserModel.findByIdAndDelete(id);
+        if (!deletedUser) {
+            res.status(404).json({ message: "Người dùng không tồn tại!" });
+            return;
+        }
+
+        res.status(200).json({ message: "Xóa người dùng thành công!" });
+    } catch (error) {
+        res.status(500).json({ message: "Lỗi khi xóa người dùng", error });
+    }
+};
+
 
 
 

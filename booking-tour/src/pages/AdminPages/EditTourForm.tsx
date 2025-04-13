@@ -45,12 +45,17 @@ export default function EditTourForm() {
                 if (response.data.additionalImageUrls) {
                     response.data.extraImages = response.data.additionalImageUrls.map((url: string) => ({ url }));
                 }
+                if (typeof response.data.highlights === "string") {
+                    response.data.highlights = [response.data.highlights];
+                }
+            
                 if (response.data.image) {
                     form.setFieldsValue({ image: response.data.image });
-
                 }
-
-
+                form.setFieldsValue({
+                    ...response.data,
+                    isFeatured: response.data.isFeatured ?? false, // ✅ fix chính ở đây
+                });
                 form.setFieldsValue(response.data);
             } catch (error) {
                 console.error("Lỗi khi tải tour:", error);
@@ -60,9 +65,6 @@ export default function EditTourForm() {
                 });
             }
         };
-
-
-
         fetchTour();
     }, [id, form]);
     const onFinish = async (values: any) => {
@@ -88,6 +90,7 @@ export default function EditTourForm() {
                 ...values,
                 program: programWithDays,
                 image: values.image,
+                highlights: values.highlights || [],
                 startDate: values.startDate ? values.startDate.format("YYYY-MM-DD") : null,
                 endDate: values.endDate ? values.endDate.format("YYYY-MM-DD") : null,
                 isFeatured: values.isFeatured || false,
@@ -212,6 +215,48 @@ export default function EditTourForm() {
                                     <Option value="mien-trung">Miền Trung</Option>
                                     <Option value="mien-nam">Miền Nam</Option>
                                 </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Form.Item label="Tour này có gì hay?">
+                                <Form.List
+                                    name="highlights"
+                                    rules={[
+                                        {
+                                            validator: async (_, highlights) => {
+                                                if (!highlights || highlights.length < 1) {
+                                                    return Promise.reject(new Error("Vui lòng thêm ít nhất 1 điểm nổi bật!"));
+                                                }
+                                            },
+                                        },
+                                    ]}
+                                >
+                                    {(fields, { add, remove }) => (
+                                        <>
+                                            {fields.map(({ key, name, ...restField }) => (
+                                                <Row key={key} gutter={16} align="middle" className="mb-2">
+                                                    <Col span={22}>
+                                                        <Form.Item
+                                                            {...restField}
+                                                            name={name}
+                                                            rules={[{ required: true, message: "Nhập điểm nổi bật!" }]}
+                                                        >
+                                                            <Input placeholder="Nhập điểm nổi bật của tour..." />
+                                                        </Form.Item>
+                                                    </Col>
+                                                    <Col span={2}>
+                                                        <Button danger icon={<MinusOutlined />} onClick={() => remove(name)} />
+                                                    </Col>
+                                                </Row>
+                                            ))}
+                                            <Form.Item>
+                                                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                                                    Thêm điểm nổi bật
+                                                </Button>
+                                            </Form.Item>
+                                        </>
+                                    )}
+                                </Form.List>
                             </Form.Item>
                         </Col>
 

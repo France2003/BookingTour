@@ -1,0 +1,19 @@
+.loader {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #f3f3f3; /* Màu sáng cho viền ngoài */
+    border-top: 6px solid #3498db; /* Màu xanh dương cho viền trên */
+    border-radius: 50%;
+    animation: spin 1.5s linear infinite; /* Hiệu ứng xoay tròn */
+  }
+  
+  /* Tạo hiệu ứng xoay tròn */
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

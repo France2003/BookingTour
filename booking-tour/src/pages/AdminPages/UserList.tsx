@@ -3,7 +3,8 @@ import axios from "axios";
 import { Eye, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-
+import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from "react-toastify";
 // Kiểu dữ liệu người dùng
 interface User {
   _id: string;
@@ -46,7 +47,6 @@ const UserList: React.FC = () => {
   // Xử lý xóa người dùng
   const confirmDelete = async () => {
     if (!selectedUserId) return;
-
     try {
       await axios.delete(`http://localhost:3001/api/auth/users/${selectedUserId}`);
       setUsers((prev) => prev.filter((user) => user._id !== selectedUserId));
@@ -57,6 +57,7 @@ const UserList: React.FC = () => {
       setShowModal(false);
       setSelectedUserId(null);
     }
+    toast.success(" Xóa người dùng thành công!");
   };
 
   // Bộ lọc tìm kiếm
@@ -138,29 +139,30 @@ const UserList: React.FC = () => {
 
       {/* Modal xác nhận xóa */}
       {showModal && (
-  <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-    <div className="bg-white p-4 rounded-md shadow w-full max-w-sm">
-      <h3 className="text-base font-medium mb-2">Xác nhận xóa người dùng</h3>
-      <p className="text-sm text-gray-600 mb-4">Bạn có chắc muốn xóa người dùng này không?</p>
-      <div className="flex justify-end gap-2">
-        <button
-          className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-100"
-          onClick={() => setShowModal(false)}
-        >
-          Hủy
-        </button>
-        <button
-          className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
-          onClick={confirmDelete}
-        >
-          Xóa
-        </button>
-      </div>
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-md shadow w-full max-w-sm">
+            <h3 className="text-base font-medium mb-2">Xác nhận xóa người dùng</h3>
+            <p className="text-sm text-gray-600 mb-4">Bạn có chắc muốn xóa người dùng này không?</p>
+            <div className="flex justify-end gap-2">
+              <button
+                className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-100"
+                onClick={() => setShowModal(false)}
+              >
+                Hủy
+              </button>
+              <button
+                className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
+                onClick={confirmDelete}
+              >
+                Xóa
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      <ToastContainer position="top-right" autoClose={2000} />
     </div>
-  </div>
-)}
-
-    </div>
+    
   );
 };
 

@@ -49,7 +49,7 @@ export default function AddTour() {
       }
 
       // Kiểm tra tất cả các giá trị bắt buộc trước khi gửi
-      if (!values.title || !values.tour || !values.tourCode || !values.destination || !values.vehicle || !values.location || !values.duration || !values.price || !values.imageUrl || !values.additionalImageUrls || !values.startDate || !values.endDate || !values.seatsAvailable || !values.region || !values.childPrice || !values.babyPrice || !values.program) {
+      if (!values.title || !values.tour || !values.tourCode || !values.destination || !values.vehicle || !values.location || !values.duration || !values.highlights || !values.price || !values.imageUrl || !values.additionalImageUrls || !values.startDate || !values.endDate || !values.seatsAvailable || !values.region || !values.childPrice || !values.babyPrice || !values.program) {
         notification.error({
           message: "Lỗi!",
           description: "Thiếu thông tin tour, vui lòng kiểm tra lại các trường bắt buộc.",
@@ -64,7 +64,14 @@ export default function AddTour() {
         });
         return;
       }
-
+      // ✅ Kiểm tra nếu là tour nổi bật thì startDate phải thuộc năm 2025
+      if (values.isFeatured && (!values.startDate || values.startDate.year() !== 2025)) {
+        notification.error({
+          message: "Lỗi!",
+          description: "Chỉ những tour khởi hành trong năm 2025 mới được đánh dấu là nổi bật!",
+        });
+        return;
+      }
       // Log dữ liệu gửi đi để kiểm tra
       console.log("Dữ liệu gửi đi:", values);
       const programWithDays = (values.program || []).map((item: any, index: number) => ({
@@ -100,7 +107,7 @@ export default function AddTour() {
         additionalImageUrls: values.additionalImageUrls,
         startDate: values.startDate ? values.startDate.format("YYYY-MM-DD") : null,
         endDate: values.endDate ? values.endDate.format("YYYY-MM-DD") : null,
-        isFeatured: values.isFeatured || false,
+        isFeatured: Boolean(values.isFeatured),
         price: Number(values.price),
         childPrice: Number(values.childPrice),
         babyPrice: Number(values.babyPrice),
@@ -186,19 +193,18 @@ export default function AddTour() {
                 <Input placeholder="Nhập mã tour..." />
               </Form.Item>
             </Col>
-
             {/* Địa điểm & Điểm đến */}
             <Col span={12}>
               <Form.Item label="Địa điểm" name="location" rules={[{ required: true, message: "Vui lòng nhập địa điểm!" }]}>
                 <Input placeholder="Nhập địa điểm..." />
               </Form.Item>
             </Col>
+            {/* / */}
             <Col span={12}>
               <Form.Item label="Nơi đến" name="destination" rules={[{ required: true, message: "Vui lòng nhập nơi đến!" }]}>
                 <Input placeholder="Nhập nơi đến..." />
               </Form.Item>
             </Col>
-
             {/* Phương tiện & Thời gian */}
             <Col span={12}>
               <Form.Item label="Phương tiện" name="vehicle" rules={[{ required: true, message: "Vui lòng nhập phương tiện!" }]}>
@@ -210,20 +216,18 @@ export default function AddTour() {
                 <Input placeholder="Nhập số ngày..." />
               </Form.Item>
             </Col>
-
-
             {/* Ngày khởi hành & Ngày kết thúc */}
             <Col span={12}>
               <Form.Item label="Ngày khởi hành" name="startDate" rules={[{ required: true, message: "Chọn ngày khởi hành!" }]}>
                 <DatePicker format="YYYY-MM-DD" className="w-full" />
               </Form.Item>
             </Col>
+            {/* / */}
             <Col span={12}>
               <Form.Item label="Ngày kết thúc" name="endDate" rules={[{ required: true, message: "Chọn ngày kết thúc!" }]}>
                 <DatePicker format="YYYY-MM-DD" className="w-full" />
               </Form.Item>
             </Col>
-
             {/* Chọn vùng miền */}
             <Col span={12}>
               <Form.Item label="Vùng miền" name="region" rules={[{ required: true, message: "Vui lòng chọn vùng miền!" }]}>
@@ -232,6 +236,57 @@ export default function AddTour() {
                   <Option value="mien-trung">Miền Trung</Option>
                   <Option value="mien-nam">Miền Nam</Option>
                 </Select>
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item label="Tour này có gì hay?">
+                <Form.List
+                  name="highlights"
+                  rules={[
+                    {
+                      validator: async (_, highlights) => {
+                        if (!highlights || highlights.length < 1) {
+                          return Promise.reject(new Error("Vui lòng thêm ít nhất 1 điểm nổi bật!"));
+                        }
+                      },
+                    },
+                  ]}
+                >
+                  {(fields, { add, remove }) => (
+                    <>
+                      {fields.map(({ key, name, ...restField }) => (
+                        <Row key={key} gutter={16} align="middle" className="mb-2">
+                          <Col span={22}>
+                            <Form.Item
+                              {...restField}
+                              name={name}
+                              rules={[{ required: true, message: "Nhập điểm nổi bật!" }]}
+                            >
+                              <Input placeholder="Nhập điểm nổi bật của tour..." />
+                            </Form.Item>
+                          </Col>
+                          <Col span={2}>
+                            <Button
+                              danger
+                              icon={<MinusOutlined />}
+                              onClick={() => remove(name)}
+                            />
+                          </Col>
+                        </Row>
+                      ))}
+                      <Form.Item>
+                        <Button
+                          type="dashed"
+                          onClick={() => add()}
+                          block
+                          icon={<PlusOutlined />}
+                        >
+                          Thêm điểm nổi bật
+                        </Button>
+                      </Form.Item>
+                    </>
+                  )}
+                </Form.List>
               </Form.Item>
             </Col>
 
@@ -290,7 +345,6 @@ export default function AddTour() {
                 />
               </Form.Item>
             </Col>
-
             <Col span={12}>
               <Form.Item label="Giá tour em bé" name="babyPrice" rules={[{ required: true, message: "Nhập giá tour cho em bé!" }]}>
                 <InputNumber<number> // 👈 ép kiểu rõ ràng thành number
@@ -356,7 +410,6 @@ export default function AddTour() {
                     </Col>
                   </Row>
                 ))}
-
                 <Button
                   type="dashed"
                   icon={<PlusOutlined />}
@@ -371,9 +424,6 @@ export default function AddTour() {
 
 
             </Col>
-
-
-
             <Col span={24}>
               <Form.Item label="Chương trình Tour" required>
                 {(programList || []).map((_: any, index: number) => (

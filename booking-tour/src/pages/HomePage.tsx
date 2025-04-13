@@ -15,7 +15,6 @@ const HomePage = () => {
             </div>
             <div>
                 <Border />
-                
             </div>
         </>
     );
