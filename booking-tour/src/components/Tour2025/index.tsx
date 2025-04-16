@@ -7,6 +7,7 @@ import "swiper/css/pagination";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { motion } from "framer-motion";
 import axios from "axios";  // Import axios
+import { Link } from "react-router-dom";
 
 const TourNew = () => {
     const prevRef = useRef<HTMLButtonElement | null>(null);
@@ -39,13 +40,13 @@ const TourNew = () => {
     }, [swiperInstance]);
 
     return (
-        <section className="container mx-auto px-6 py-12 relative">
+        <section className="container px-[200px] mx-auto  py-12 relative">
             <motion.div
                 initial={{ opacity: 0, y: 50 }}  // Bắt đầu ẩn và dịch xuống 50px
                 whileInView={{ opacity: 1, y: 0 }} // Khi vào màn hình, xuất hiện từ dưới lên
                 transition={{ duration: 0.8, ease: "easeOut" }} // Hiệu ứng mượt
                 viewport={{ once: true }} // Chỉ chạy 1 lần
-                className="mb-10 px-[80px]"
+                className="mb-10 "
             >
                 <h2 className="text-3xl font-bold text-blue-700">
                     Chào mừng bạn đến với Đình Pháp – Cánh cửa mở ra những chuyến hành trình đáng nhớ!
@@ -62,7 +63,7 @@ const TourNew = () => {
             <h3 className="text-3xl font-bold text-center text-blue-600 mb-6">TOUR NỔI BẬT</h3>
             <button
                 ref={prevRef}
-                className="absolute left-[55px] top-[500px] transform -translate-y-1/2 z-10 p-2 bg-gray-200 rounded-full shadow-lg hover:bg-gray-400 transition"
+                className="absolute left-[180px] top-[500px] transform -translate-y-1/2 z-10 p-2 bg-gray-200 rounded-full shadow-lg hover:bg-gray-400 transition"
             >
                 <FaChevronLeft className="text-xl text-gray-700" />
             </button>
@@ -86,12 +87,12 @@ const TourNew = () => {
                     className="pb-10"
                 >
                     {tours.map((tour) => (
-                        <SwiperSlide key={tour.id} className="flex mb-5 px-[50px] justify-center">
+                        <SwiperSlide key={tour.id} className="flex mb-5 justify-center">
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.9 }}  // Hình ảnh bắt đầu mờ và nhỏ
                                 whileInView={{ opacity: 1, scale: 1 }} // Hình ảnh phóng to và mờ dần
                                 transition={{ duration: 0.8, ease: "easeOut" }}
-                                className="bg-white shadow-lg rounded-lg overflow-hidden w-[400px] h-[400px] relative group"
+                                className="bg-white shadow-lg rounded-lg overflow-hidden w-[370px] h-[450px] relative group"
                             >
                                 <div className="overflow-hidden rounded-t-lg">
                                     <img
@@ -117,14 +118,16 @@ const TourNew = () => {
                                             <p className="w-full truncate"><span className="font-semibold">Điểm đến:</span> {tour.destination}</p>
                                         </div>
                                     </div>
-                                    <motion.h4
-                                        initial={{ opacity: 0, y: 20 }}  // Tiêu đề bắt đầu ẩn và dịch lên
-                                        whileInView={{ opacity: 1, y: 0 }}  // Tiêu đề hiện lên
-                                        transition={{ duration: 0.8, ease: "easeOut" }}
-                                        className="text-blue-600 text-[17px] font-medium mt-2 text-ellipsis overflow-hidden"
-                                    >
-                                        {tour.title}
-                                    </motion.h4>
+                                    <Link to={`/tour/${tour._id}`} className="block mt-4">
+                                        <motion.h4
+                                            initial={{ opacity: 0, y: 20 }}  // Tiêu đề bắt đầu ẩn và dịch lên
+                                            whileInView={{ opacity: 1, y: 0 }}  // Tiêu đề hiện lên
+                                            transition={{ duration: 0.8, ease: "easeOut" }}
+                                            className="text-blue-600 text-[17px] font-medium mt-2 text-ellipsis   overflow-hidden"
+                                        >
+                                            {tour.title}
+                                        </motion.h4>
+                                    </Link>
                                 </div>
                             </motion.div>
                         </SwiperSlide>
@@ -134,7 +137,7 @@ const TourNew = () => {
 
             <button
                 ref={nextRef}
-                className="absolute right-[40px] top-[500px] transform -translate-y-1/2 z-10 p-2 bg-gray-200 rounded-full shadow-lg hover:bg-gray-400 transition"
+                className="absolute right-[180px] top-[500px] transform -translate-y-1/2 z-10 p-2 bg-gray-200 rounded-full shadow-lg hover:bg-gray-400 transition"
             >
                 <FaChevronRight className="text-xl text-gray-700" />
             </button>

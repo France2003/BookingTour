@@ -1,11 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaCalendarAlt } from "react-icons/fa";
 import { Helmet } from "react-helmet";
-const TourMienBacPage = () => {
+
+const TourMienTrungPage = () => {
     const [tours, setTours] = useState<any[]>([]);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const pageParam = parseInt(searchParams.get("page") || "1", 10);
+    const [currentPage, setCurrentPage] = useState<number>(pageParam);
+
+    const toursPerPage = 6;
+
+    useEffect(() => {
+        setCurrentPage(pageParam); // đồng bộ page trên URL khi load
+    }, [pageParam]);
 
     const formatCurrency = (amount?: number) =>
         amount ? `${amount.toLocaleString("vi-VN")} VNĐ` : "Đang cập nhật";
@@ -25,6 +35,15 @@ const TourMienBacPage = () => {
         fetchTours();
     }, []);
 
+    // Tính phân trang
+    const totalPages = Math.ceil(tours.length / toursPerPage);
+    const startIndex = (currentPage - 1) * toursPerPage;
+    const currentTours = tours.slice(startIndex, startIndex + toursPerPage);
+
+    const handlePageChange = (page: number) => {
+        setSearchParams({ page: page.toString() });
+    };
+
     return (
         <div className="px-[80px] pt-[650px] pb-20 bg-gradient-to-b from-blue-50 to-white min-h-screen">
             <Helmet>
@@ -35,6 +54,7 @@ const TourMienBacPage = () => {
             <h1 className="text-5xl font-extrabold text-center text-blue-800 mb-12 drop-shadow-sm">
                 🌄 Tour Du Lịch Miền Bắc
             </h1>
+
             <div className="bg-white p-8 rounded-xl shadow-lg mb-16 text-lg leading-relaxed text-gray-700">
                 <p className="mb-3">
                     Khám phá vẻ đẹp truyền thống và hùng vĩ của miền Bắc Việt Nam – nơi hội tụ những danh lam thắng cảnh nổi tiếng, nền văn hóa ngàn năm và khí hậu đặc trưng bốn mùa.
@@ -47,11 +67,9 @@ const TourMienBacPage = () => {
             {tours.length === 0 ? (
                 <p className="text-center text-xl text-gray-500">Không có tour nào ở khu vực này.</p>
             ) : (
-                <div className="grid gap-10">
-                    {tours.map((tour, index) => {
-                        const hasDiscount = tour.discount && tour.discount < tour.price;
-
-                        return (
+                <>
+                    <div className="grid gap-10">
+                        {currentTours.map((tour, index) => (
                             <motion.div
                                 key={tour._id}
                                 initial={{ opacity: 0, scale: 0.8 }}
@@ -61,7 +79,7 @@ const TourMienBacPage = () => {
                                     delay: index * 0.2,
                                     ease: "easeOut",
                                 }}
-                                className="bg-white  rounded-xl shadow-md overflow-hidden flex flex-col md:flex-row transition-all duration-300"
+                                className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col md:flex-row transition-all duration-300"
                             >
                                 <div className="md:w-1/3 relative group">
                                     <img
@@ -71,19 +89,18 @@ const TourMienBacPage = () => {
                                     />
                                 </div>
                                 <div className="md:w-2/3 p-4 flex flex-col justify-between">
-                                    {/* Cấu trúc Flexbox để chia cột */}
                                     <div className="flex flex-col md:flex-row justify-between">
                                         <div className="md:w-3/4">
                                             <h2 className="text-2xl font-bold text-blue-900 mb-2">{tour.title}</h2>
-                                            <p className="text-gray-600 mb-1">🚩 <b>Điểm xuất phát: </b> {tour.location}</p>
-                                            <p className="text-gray-600 mb-1">🎯 <b>Điểm đến: </b> {tour.destination}</p>
-                                            <p className="text-gray-600 mb-1">🕒 <b>Thời gian: </b> {tour.duration}</p>
-                                            <p className="text-gray-600 mb-1">🚗 <b>Phương tiện: </b> {tour.vehicle}</p>
+                                            <p className="text-gray-600 mb-1">🚩 <b>Điểm xuất phát:</b> {tour.location}</p>
+                                            <p className="text-gray-600 mb-1">🎯 <b>Điểm đến:</b> {tour.destination}</p>
+                                            <p className="text-gray-600 mb-1">🕒 <b>Thời gian:</b> {tour.duration}</p>
+                                            <p className="text-gray-600 mb-1">🚗 <b>Phương tiện:</b> {tour.vehicle}</p>
                                             <p className="text-gray-600 mb-1 truncate w-[505px]">{tour.highlights}</p>
                                         </div>
-                                        <div className="flex flex-col items-end  md:w-1/4 space-y-3  md:mt-0">
+                                        <div className="flex flex-col items-end md:w-1/4 space-y-3 md:mt-0">
                                             <Link
-                                                to={`/tour-mien-bac/${tour.tourCode}`}
+                                                to={`/tour/${tour._id}`}
                                                 className="inline-block mt-[10px] bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-semibold transition duration-300 shadow-sm"
                                             >
                                                 Chi tiết
@@ -96,17 +113,51 @@ const TourMienBacPage = () => {
                                                 <FaCalendarAlt className="text-[#969696]" />
                                                 <span>{new Date(tour.endDate).toLocaleDateString("vi-VN")}</span>
                                             </p>
-                                            <p className="text-red-500 font-bold text-[18px]"><b className="text-gray-600">Giá: </b>{formatCurrency(tour.price)}</p>
+                                            <p className="text-red-500 font-bold text-[18px]">
+                                                <b className="text-gray-600">Giá: </b>{formatCurrency(tour.price)}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
                             </motion.div>
-                        );
-                    })}
-                </div>
+                        ))}
+                    </div>
+
+                    {/* PHÂN TRANG */}
+                    <div className="flex justify-center mt-12 space-x-2">
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className={`px-4 py-2 rounded-lg font-semibold ${currentPage === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
+                                }`}
+                        >
+                            Trang trước
+                        </button>
+
+                        {[...Array(totalPages)].map((_, i) => (
+                            <button
+                                key={i + 1}
+                                onClick={() => handlePageChange(i + 1)}
+                                className={`px-4 py-2 rounded-lg font-semibold ${currentPage === i + 1 ? "bg-orange-500 text-white" : "bg-gray-200 hover:bg-gray-300"
+                                    }`}
+                            >
+                                {i + 1}
+                            </button>
+                        ))}
+
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className={`px-4 py-2 rounded-lg font-semibold ${currentPage === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
+                                }`}
+                        >
+                            Trang sau
+                        </button>
+                    </div>
+                </>
             )}
         </div>
     );
 };
 
-export default TourMienBacPage;
+export default TourMienTrungPage;

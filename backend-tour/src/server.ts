@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/authRoutes";
 import tourRoutes from "./routes/tourRoutes";
 import adminRoutes from "./routes/adminRoutes"; 
+import bookingRoutes from "./routes/bookingRouters";
 import cors from "cors";
 import { createAdminAccount } from "./utils/createAdmin";
 import { getTourById, updateTourStatus } from "./controllers/tourController"; // 👈 Import hàm lấy tour theo ID
@@ -35,6 +36,7 @@ app.use(cors({
 app.use("/api/auth", authRoutes);
 app.use("/api/tours", tourRoutes);
 app.use("/api/admin", adminRoutes); 
+app.use("/api/bookings", bookingRoutes);
 app.get('/api/tours/:id', getTourById);
 app.patch('/api/tours/:id/status', updateTourStatus);
 app.listen(PORT, () => {

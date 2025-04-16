@@ -22,6 +22,9 @@ import TourDetailPage from './pages/TourDetailPage/TourDetailPage'
 import TourMienTrungPage from './pages/TourMienTrungPage/TourMienTrungPage'
 import TourMienNamPage from './pages/TourMienNamPage/TourMienNamPage'
 import TourPage from './components/TourPage/TourPages'
+import TravelDestinationsDetail from './pages/PageTravelDestinations/TravelDestinationsDetail'
+import CustomerInfoForm from './pages/CustomerInfoForm/CustomerInfoForm'
+import PageTravelDestinations from './pages/PassengerInformation/PassengerInformation'
 function App() {
   return (
     <>
@@ -38,10 +41,13 @@ function App() {
           <Route path='/' element={<DefaultLayout />}>
             <Route index element={<HomePage />}/>  
             <Route path="/tour-mien-bac" element={<TourMienBacPage />} />
-            <Route path="/tour-mien-bac/:tourCode" element={<TourDetailPage />} />
+            <Route path="/tour/:id" element={<TourDetailPage />} />
+            <Route path="/dat-tour/:id" element={<CustomerInfoForm />} />
+            <Route path="/passenger-info/:id" element={<PageTravelDestinations/>} />
             <Route path="/tour/:region/:item" element={<TourPage />} />
             <Route path="/tour-mien-trung" element={<TourMienTrungPage />} />
             <Route path="/tour-mien-nam" element={<TourMienNamPage />} />
+            <Route path="/:slug" element={<TravelDestinationsDetail />} />
           </Route>
           <Route path="/users/:id" element={<UserInfoPage />} />
           <Route path='/admin' element={<AdminLayout />}>
