@@ -41,40 +41,30 @@ const CustomerInfoForm = () => {
     const handleSubmitBooking = async () => {
         console.log("isAgreed:", isAgreed);
         console.log("selectedPaymentMethod:", selectedPaymentMethod);
+
         if (!selectedPaymentMethod || !isAgreed) {
             alert("Vui lòng chọn phương thức thanh toán và đồng ý điều khoản.");
             return;
         }
-
-        console.log({
+        // Chỉ gửi các thông tin cơ bản cần thiết
+        const bookingData = {
             tourId: tour._id,
             adults,
             children,
             babies,
             paymentType,
-            paymentMethod: selectedPaymentMethod,
-            totalAmount,
-            status: 'pending',
-        });
-
+            paymentMethod: selectedPaymentMethod,totalAmount, 
+            status: 'pending', 
+            
+        };
+        console.log(bookingData);
         try {
-            const tourId = tour._id;
-            const data = {
-                tourId,
-                adults,
-                children,
-                babies,
-                paymentType: paymentType || 'full', 
-                paymentMethod: selectedPaymentMethod,
-                totalAmount, 
-                status: 'pending',
-            };
-            const response = await axios.post('http://localhost:3001/api/bookings', data, {
+            console.log("Dữ liệu gửi lên API:", bookingData); 
+            const response = await axios.post('http://localhost:3001/api/bookings', bookingData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-
             const bookingId = response.data._id;
             history(`/passenger-info/${bookingId}`, {
                 state: {
@@ -123,7 +113,7 @@ const CustomerInfoForm = () => {
     if (!tour) return <div className="text-center py-10 text-red-500">Không tìm thấy thông tin tour.</div>;
     return (
         <div className="px-[80px] pt-[620px] pb-20 bg-gradient-to-b from-blue-50 to-white min-h-screen">
-            <Timeline />
+            <Timeline currentStep={1} />
             <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Left section: Passenger count and payment */}
                 <div className="md:col-span-2 space-y-6">

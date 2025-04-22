@@ -1,13 +1,17 @@
-const steps = [
-  { id: 1, title: 'Chọn dịch vụ' },
-  { id: 2, title: 'Nhập thông tin hành khách' },
-  { id: 3, title: 'Thanh toán' },
-  { id: 4, title: 'Xác nhận' },
-];
+// 👇 Bước 1: Khai báo props
+interface TimelineProps {
+  currentStep: number;
+}
 
-const currentStep = 1;
+// 👇 Bước 2: Nhận currentStep từ props thay vì khai báo bên trong
+const Timeline: React.FC<TimelineProps> = ({ currentStep }) => {
+  const steps = [
+    { id: 1, title: 'Chọn dịch vụ' },
+    { id: 2, title: 'Nhập thông tin hành khách' },
+    { id: 3, title: 'Thanh toán' },
+    { id: 4, title: 'Xác nhận' },
+  ];
 
-const Timeline = () => {
   return (
     <div className="flex items-center justify-between w-full px-6 py-10 relative">
       {steps.map((step, index) => {
@@ -21,12 +25,10 @@ const Timeline = () => {
               className={`w-10 h-10 rounded-full flex items-center justify-center border-2 z-10 
                 ${isCompleted ? 'bg-orange-500 border-orange-500' : 
                   isActive ? 'bg-white border-orange-500 animate-pulse' : 
-                  'bg-white border-gray-300'}
-              `}
+                  'bg-white border-gray-300'}`}
             >
               <span className={`text-lg font-semibold 
-                ${isCompleted ? 'text-white' : isActive ? 'text-orange-500' : 'text-gray-400'}
-              `}>
+                ${isCompleted ? 'text-white' : isActive ? 'text-orange-500' : 'text-gray-400'}`}>
                 {step.id}
               </span>
             </div>

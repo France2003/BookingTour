@@ -1,40 +1,86 @@
-import mongoose, { Schema, Document } from "mongoose";
+import { Schema, Document, model, Types } from "mongoose";
+import { ITour } from "./Tour";
 
-export interface IBooking extends Document {
-  // userId: mongoose.Schema.Types.ObjectId;
-  tourId: mongoose.Schema.Types.ObjectId;
-  date: Date;
-  amount: number;
-
-  // Thông tin bổ sung
-  adults: number;
-  children: number;
-  babies: number;
-
-  paymentType: "full" | "half";      // Hình thức thanh toán
-  paymentMethod: "atm" | "momo";     // Phương thức thanh toán
-
-  createdAt: Date;
-  updatedAt: Date;
+interface Passenger {
+    name?: string;
+    firstName?: string;
+    gender?: string;
+    phone?: string;
+    address?: string;
+    passport?: string;
 }
 
-const bookingSchema = new Schema<IBooking>(
-  {
-    // userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    tourId: { type: mongoose.Schema.Types.ObjectId, ref: "Tour", required: true },
-    date: { type: Date, required: true },
-    amount: { type: Number, required: true },
+interface Contact {
+    name?: string;
+    phone?: string;
+    email?: string;
+    address?: string;
+    city?: string;
+    region?: string;
+}
 
-    // Các trường được bổ sung
-    adults: { type: Number, required: true },
-    children: { type: Number, required: true },
-    babies: { type: Number, required: true },
+export interface IBooking extends Document {
+    tourId: Types.ObjectId | ITour;
+    date: Date;
+    amount: number;
+    adults: number;
+    children: number;
+    babies: number;
+    paymentType: "full" | "half";
+    paymentMethod: "atm" | "momo";
+    paymentInfo?: string;
+    status?: "pending" | "confirmed" | "cancelled";
+    passengers?: Passenger[];
+    contact?: Contact;
+    createdAt: Date;
+    updatedAt: Date;
+}
 
-    paymentType: { type: String, enum: ["full", "half"], required: true },
-    paymentMethod: { type: String, enum: ["atm", "momo"], required: true },
-  },
-  {
-    timestamps: true,
-  }
+const passengerSchema = new Schema<Passenger>(
+    {
+        name: String,
+        firstName: String,
+        gender: String,
+        phone: String,
+        address: String,
+        passport: String,
+    },
+    { _id: false }
 );
-export const Booking = mongoose.model<IBooking>("Booking", bookingSchema);
+
+const contactSchema = new Schema<Contact>(
+    {
+        name: String,
+        phone: String,
+        email: String,
+        address: String,
+        city: String,
+        region: String,
+    },
+    { _id: false }
+);
+
+const bookingSchema = new Schema<IBooking>(
+    {
+        tourId: { type: Schema.Types.ObjectId, ref: "Tour", required: true }, // Đổi từ tourId
+        date: { type: Date, required: true },
+        amount: { type: Number, required: true },
+        adults: { type: Number, required: true },
+        children: { type: Number, required: true },
+        babies: { type: Number, required: true },
+        status: {
+            type: String,
+            enum: ["pending", "confirmed", "cancelled"],
+            default: "pending",
+            required: true,
+        },
+        paymentType: { type: String, enum: ["full", "half"], required: true },
+        paymentMethod: { type: String, enum: ["atm", "momo"], required: true },
+        passengers: { type: [passengerSchema], default: [], required: false },
+        paymentInfo: { type: String, default: "" },
+        contact: { type: contactSchema, default: {}, required: false },
+    },
+    { timestamps: true }
+);
+
+export const Booking = model<IBooking>("Booking", bookingSchema);

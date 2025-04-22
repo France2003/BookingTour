@@ -24,7 +24,11 @@ import TourMienNamPage from './pages/TourMienNamPage/TourMienNamPage'
 import TourPage from './components/TourPage/TourPages'
 import TravelDestinationsDetail from './pages/PageTravelDestinations/TravelDestinationsDetail'
 import CustomerInfoForm from './pages/CustomerInfoForm/CustomerInfoForm'
-import PageTravelDestinations from './pages/PassengerInformation/PassengerInformation'
+import PassengerInformation from './pages/PassengerInformation/PassengerInformation'
+import PaymentPage from './pages/PaymentPage/PaymentPage'
+import SuccessPaymentPage from './pages/SuccessPaymentPage/SuccessPaymentPage'
+import AdminBookingsPage from './pages/AdminPages/AdminBookingsPage'
+import BookingDetailPage from './pages/AdminPages/BookingDetailPage'
 function App() {
   return (
     <>
@@ -43,7 +47,9 @@ function App() {
             <Route path="/tour-mien-bac" element={<TourMienBacPage />} />
             <Route path="/tour/:id" element={<TourDetailPage />} />
             <Route path="/dat-tour/:id" element={<CustomerInfoForm />} />
-            <Route path="/passenger-info/:id" element={<PageTravelDestinations/>} />
+            <Route path="/passenger-info/:id" element={<PassengerInformation />} />
+            <Route path="/thanh-toan/:id" element={<PaymentPage />} />
+            <Route path="/hoan-tat/:id" element={<SuccessPaymentPage />} />
             <Route path="/tour/:region/:item" element={<TourPage />} />
             <Route path="/tour-mien-trung" element={<TourMienTrungPage />} />
             <Route path="/tour-mien-nam" element={<TourMienNamPage />} />
@@ -54,6 +60,8 @@ function App() {
             <Route index element={<AdminDashboard />} />
             <Route path="tours" element={<TourManagement />} />
             <Route path="users" element={<UserList />} />
+            <Route path="bookings" element={<AdminBookingsPage />} />
+            <Route path="/admin/bookings/view/:id" element={<BookingDetailPage />} />
             <Route path="users/view/:id" element={<ViewUser />} />
             <Route path="tours/add" element={<AddTourForm />} />
             <Route path="tours/view/:id" element={<ViewTour/>} />

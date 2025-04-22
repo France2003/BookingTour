@@ -91,6 +91,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ error: (error as Error).message });
     }
 };
+//Lấy danh sách người dùng( Từ Đăng Ký)
 export const getUsers = async (req: Request, res: Response) => {
     try {
         const users = await User.find({ role: "user" }); // ✅ Chỉ lấy user thường
@@ -99,6 +100,7 @@ export const getUsers = async (req: Request, res: Response) => {
         res.status(500).json({ error: "Lỗi khi lấy danh sách người dùng!" });
     }
 };
+//Lấy thông tin chi tiết người dùng theo ID
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.params.id;
@@ -109,9 +111,10 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
         }
         // Lấy lịch sử đặt tour
         const bookings = await Booking.find({ userId })
-        .populate("tourId", "title") // populate tên tour
+        .populate("tour", "title") // populate tên tour
         .sort({ date: -1 })          // mới nhất trước
         .lean();
+        console.log("Bookings:", bookings);
         res.status(200).json({user, bookings});
         return
     } catch (error) {
@@ -119,6 +122,7 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
         return
     }
 };
+/// Cập nhật thông tin chi tiết của người dùng
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -149,6 +153,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
         res.status(500).json({ message: "Lỗi khi cập nhật người dùng" });
     }
 };
+//Xóa người dùng
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;

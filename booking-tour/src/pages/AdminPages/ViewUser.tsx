@@ -9,9 +9,16 @@ interface IBooking {
   _id: string;
   date: string;
   amount: number;
-  tourId: {
-    title: string;
-  };
+  tourId: string; // ID của tour đã đặt
+}
+
+interface ITour {
+  _id: string;
+  title: string;
+  location: string;
+  destination: string;
+  startDate: Date;
+  endDate: Date;
 }
 
 interface IUser {
@@ -25,7 +32,7 @@ interface IUser {
   city?: string;
   avatar?: string;
   role?: "user" | "admin";
-  bookings?: IBooking[];
+  bookings?: IBooking[]; // Danh sách đơn đặt tour
 }
 
 const ViewUser: React.FC = () => {
@@ -33,13 +40,30 @@ const ViewUser: React.FC = () => {
   const [userData, setUserData] = useState<IUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [bookings, setBookings] = useState<IBooking[]>([]);
+  const [tours, setTours] = useState<ITour[]>([]); // Thêm state chứa thông tin các tour
+
+  // Fetch thông tin chi tiết người dùng và booking
   const fetchUserDetails = async () => {
     try {
       const res = await axios.get(`http://localhost:3001/api/auth/users/${id}`);
       setUserData(res.data.user);
       setBookings(res.data.bookings);
+      console.log("User data fetched:", res.data.user); // Kiểm tra dữ liệu người dùng
+      
+      console.log("Bookings from user:", res.data.bookings); // Kiểm tra bookings
+      // Fetch thông tin tour từ danh sách bookings
+      const tourRequests = res.data.bookings.map((booking: IBooking) =>
+        axios.get(`http://localhost:3001/api/tours/${booking.tourId}`)
+      );
+      const tourResponses = await Promise.all(tourRequests);
+
+      // Kiểm tra các phản hồi từ API tour
+      console.log("Tour data fetched:", tourResponses);
+
+      const fetchedTours = tourResponses.map((response) => response.data);
+      setTours(fetchedTours);
     } catch (err) {
-      console.error("Lỗi lấy dữ liệu người dùng:", err);
+      console.error("Lỗi khi lấy dữ liệu người dùng:", err);
     } finally {
       setLoading(false);
     }
@@ -53,7 +77,7 @@ const ViewUser: React.FC = () => {
     <div className="max-w-3xl mx-auto mt-10 space-y-6">
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Xem chi tiết</title>
+        <title>Xem chi tiết người dùng</title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
 
@@ -69,9 +93,7 @@ const ViewUser: React.FC = () => {
             <Descriptions.Item label="Email">{userData.email || "Chưa có"}</Descriptions.Item>
             <Descriptions.Item label="SĐT">{userData.phone || "Chưa có"}</Descriptions.Item>
             <Descriptions.Item label="Ngày sinh">
-              {userData.birthdate
-                ? new Date(userData.birthdate).toLocaleDateString()
-                : "Chưa có"}
+              {userData.birthdate ? new Date(userData.birthdate).toLocaleDateString() : "Chưa có"}
             </Descriptions.Item>
             <Descriptions.Item label="Giới tính">{userData.gender || "Chưa có"}</Descriptions.Item>
             <Descriptions.Item label="Địa chỉ">{userData.address || "Chưa có"}</Descriptions.Item>
@@ -99,22 +121,29 @@ const ViewUser: React.FC = () => {
           <div className="text-center py-6">
             <Spin size="large" />
           </div>
-        ) : userData?.bookings && userData.bookings.length > 0 ? (
+        ) : bookings.length > 0 ? (
           <ul className="space-y-4">
-            {userData.bookings.map((booking, index) => (
-              <li key={booking._id} className="border p-4 rounded-md shadow-sm">
-                <p><strong>STT:</strong> {index + 1}</p>
-                <p><strong>Tên tour:</strong> {booking.tourId?.title || "Không xác định"}</p>
-                <p><strong>Ngày đặt:</strong> {new Date(booking.date).toLocaleDateString()}</p>
-                <p><strong>Số tiền:</strong> {booking.amount.toLocaleString()} đ</p>
-              </li>
-            ))}
+            {bookings.map((booking, index) => {
+              // Tìm thông tin tour từ mảng tours
+              const tour = tours.find((tour) => tour._id === booking.tourId);
+              return (
+                <li key={booking._id} className="border p-4 rounded-md shadow-sm">
+                  <p><strong>STT:</strong> {index + 1}</p>
+                  <p><strong>Tên tour:</strong> {tour?.title || "Không xác định"}</p>
+                  <p><strong>Địa điểm:</strong> {tour?.location || "Chưa có thông tin địa điểm"}</p>
+                  <p><strong>Mô tả tour:</strong> {tour?.destination || "Chưa có mô tả"}</p>
+                  <p><strong>Ngày đặt:</strong> {new Date(booking.date).toLocaleDateString()}</p>
+                  <p><strong>Số tiền:</strong> {booking.amount.toLocaleString()} đ</p>
+                </li>
+              );
+            })}
           </ul>
         ) : (
           <p className="text-gray-500 text-center py-4">Bạn chưa đặt tour nào.</p>
         )}
       </Card>
 
+      {/* Quay lại danh sách người dùng */}
       <Link to="/admin/users" className="flex items-center gap-2 text-[15px] text-blue-600">
         <IoReturnDownBack className="text-[30px]" />
         <p>Quay lại</p>

@@ -99,7 +99,7 @@ const TourMienTrungPage = () => {
                                         </div>
                                         <div className="flex flex-col items-end md:w-1/4 space-y-3 md:mt-0">
                                             <Link
-                                                to={`/tour-mien-trung/${tour.tourCode}`}
+                                                to={`/tour/${tour._id}`}
                                                 className="inline-block mt-[10px] bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-semibold transition duration-300 shadow-sm"
                                             >
                                                 Chi tiết

@@ -35,19 +35,29 @@ export default function TourManagement() {
       console.error("Lỗi khi lấy danh sách tour", error);
     }
   }
+  // Phương thức cập nhật trạng thái tour tự động khi có booking
+  const handleTourBooked = async (tourId: string) => {
+    try {
+      const response = await axios.patch(`/api/tours/${tourId}/status`, { status: "booked" });
+      message.success("Cập nhật trạng thái tour thành 'Đã đặt'!");
+      fetchTours();  // Lấy lại danh sách tour để cập nhật dữ liệu
+    } catch (error) {
+      message.error("Cập nhật trạng thái tour thất bại.");
+    }
+  };
 
-  // Hiển thị modal xác nhận xóa
+  // Khi booking thành công, bạn sẽ gọi phương thức này
+  const handleBookingSuccess = async (tourId: string) => {
+    await handleTourBooked(tourId); // Tự động thay đổi trạng thái thành "Đã đặt"
+  };
   function showDeleteConfirm(id: string) {
     setTourIdToDelete(id);
     setIsModalVisible(true);
   }
-
-  // Đóng modal
   function handleCancel() {
     setIsModalVisible(false);
     setTourIdToDelete("");  // Xóa ID tour đã chọn
   }
-
   // Xử lý xóa tour
   async function deleteTour() {
     if (tourIdToDelete) {
@@ -88,8 +98,6 @@ export default function TourManagement() {
   const filteredTours = tours.filter((tour) =>
     tour.title.toLowerCase().includes(search.toLowerCase())
   );
-
-
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       {/* Header */}

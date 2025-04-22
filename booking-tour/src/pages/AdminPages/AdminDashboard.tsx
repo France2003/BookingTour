@@ -74,7 +74,6 @@ export default function AdminDashboard() {
               <h2 className="text-2xl font-bold">${stats.revenue.toLocaleString()}</h2>
             </CardContent>
           </Card>
-
           <Card className="bg-green-100 flex items-center p-4">
             <FaUsers className="text-4xl text-green-600" />
             <CardContent>

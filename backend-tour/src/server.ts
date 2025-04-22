@@ -7,7 +7,8 @@ import adminRoutes from "./routes/adminRoutes";
 import bookingRoutes from "./routes/bookingRouters";
 import cors from "cors";
 import { createAdminAccount } from "./utils/createAdmin";
-import { getTourById, updateTourStatus } from "./controllers/tourController"; // 👈 Import hàm lấy tour theo ID
+import { getTourById, updateTourStatus } from "./controllers/tourController";
+import paymentRoutes from "./routes/paymentRoutes";
 dotenv.config();
 const app: Application = express(); // 👈 Định nghĩa kiểu dữ liệu rõ ràng
 const PORT: number = parseInt(process.env.PORT || "3001", 10); // 👈 Chuyển đổi kiểu dữ liệu từ string -> number
@@ -30,7 +31,7 @@ app.use(express.json());
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true, 
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Các phương thức HTTP được phép
+    methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE'], // Các phương thức HTTP được phép
     allowedHeaders: ['Content-Type', 'Authorization'], // Các header được phép
 }));
 app.use("/api/auth", authRoutes);

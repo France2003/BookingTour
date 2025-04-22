@@ -12,13 +12,10 @@ interface User {
   email: string;
   phone: string;
 }
-
 const UserList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>("");
-
-  // Điều khiển Modal xóa
   const [showModal, setShowModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
