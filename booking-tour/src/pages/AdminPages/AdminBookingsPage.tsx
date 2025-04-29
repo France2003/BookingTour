@@ -9,9 +9,9 @@ import { toast, ToastContainer } from "react-toastify";
 // Kiểu dữ liệu Booking
 interface Booking {
     _id: string;
-    contact: {
-        name: string;
-        phone: string;
+    contact?: {
+        name?: string;
+        phone?: string;
     };
     tourId: {
         tour: string;
@@ -32,15 +32,17 @@ const AdminBookingsPage = () => {
             try {
                 const response = await axios.get("http://localhost:3001/api/bookings");
                 const allBookings = response.data;
-                console.log("API response:", allBookings);
 
                 if (Array.isArray(allBookings)) {
                     const paidBookings = allBookings.filter(
-                        (booking: any) => booking.paymentMethod
+                        (booking: any) => 
+                            booking.paymentMethod && 
+                            booking.contact && 
+                            typeof booking.contact.name === "string"
                     );
                     setBookings(paidBookings);
                 } else {
-                    console.error("Data không phải array:", allBookings);
+                    console.error("Dữ liệu không hợp lệ:", allBookings);
                     setBookings([]);
                 }
 
@@ -53,14 +55,17 @@ const AdminBookingsPage = () => {
 
         fetchBookings();
     }, []);
-    const filteredBookings = bookings.filter(
-        (booking) =>
-            (booking.contact.name?.toLowerCase() || "").includes(searchTerm.toLowerCase()) ||
-            booking._id?.includes(searchTerm)
-    );
+
+    const filteredBookings = bookings.filter((booking) => {
+        const name = booking.contact?.name || "";
+        const id = booking._id || "";
+        return name.toLowerCase().includes(searchTerm.toLowerCase()) || id.includes(searchTerm);
+    });
+
     const calculateFinalPayment = (booking: Booking) => {
         return booking.paymentType === "full" ? booking.amount : booking.amount / 2;
     };
+
     return (
         <div className="p-6 bg-white rounded-xl shadow-md relative">
             <Helmet>
@@ -108,10 +113,10 @@ const AdminBookingsPage = () => {
                                     </td>
                                 </tr>
                             ) : (
-                                filteredBookings.map((booking, index) => (
+                                filteredBookings.map((booking) => (
                                     <tr key={booking._id} className="border-b hover:bg-gray-50">
-                                        <td className="px-4 py-3">{booking.contact.name}</td>
-                                        <td className="px-4 py-3">{booking.contact.phone}</td>
+                                        <td className="px-4 py-3">{booking.contact?.name || "Không có tên"}</td>
+                                        <td className="px-4 py-3">{booking.contact?.phone || "Không có số"}</td>
                                         <td className="px-4 py-3">{booking.tourId.tour}</td>
                                         <td className="px-4 py-3">
                                             {new Intl.NumberFormat("vi-VN").format(calculateFinalPayment(booking))} VND

@@ -4,6 +4,7 @@ import Border from "../components/boder";
 import TravelDestinations from "../components/TravelDestinations/TravelDestinations";
 import CustomerCareBanner from "../components/CustomerCareBanner/CustomerCareBanner";
 import ChatBubble from "../components/ChatBubble/ChatBubble";
+import DestinationTabs from "../components/DestinationTabs/DestinationTabs";
 const HomePage = () => {
     return (
         <>
@@ -18,11 +19,10 @@ const HomePage = () => {
             <div>
                 <Border />
             </div>
-            {/* img */}
             <div className="p-4 px-[200px] space-y-4">
                 <div className="w-full">
                     <img
-                        src="https://saigontourist.net/uploads/homepage/3banner/2025-ChaoHe%20-%20Web%20Banner.jpg"
+                        src="https://saigontourist.net/media/upload/2025/4/23/57546211.png"
                         alt="Chào Beloved Vietnam"
                         className="w-full rounded-xl shadow-lg"
                     />
@@ -30,14 +30,14 @@ const HomePage = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     <div className="lg:col-span-2">
                         <img
-                            src="https://saigontourist.net/uploads/homepage/3banner/2025-ChaoHe%20-%20Uc%20Queensland.jpg"
+                            src="https://saigontourist.net/media/upload/2025/4/23/85d1884c.jpg"
                             alt="Úc Brisbane & Gold Coast"
                             className="w-full h-full rounded-xl shadow-lg"
                         />
                     </div>
                     <div className="flex flex-col gap-4">
                         <img
-                            src="https://saigontourist.net/uploads/homepage/3banner/2025-LE%2030.4.png"
+                            src="https://saigontourist.net/media/upload/2025/4/23/4755d86f.jpg"
                             alt="Lễ 30/4 & 1/5"
                             className="w-full rounded-xl shadow-lg"
                         />
@@ -49,7 +49,9 @@ const HomePage = () => {
                     </div>
                 </div>
             </div>
-            {/*  */}
+            <div>
+                <DestinationTabs/>
+            </div>
             <div className="relative mt-8 w-full">
                 <img
                     src="https://letravel.vn/uploaded/ANH-cate-tour/tourdulich30-4.jpg"
@@ -71,9 +73,7 @@ const HomePage = () => {
                     </button>
                 </div>
             </div>
-            {/*  Điểm đến & Trải nghiệm */}
             <TravelDestinations />
-            {/*  */}
             <div className="relative mt-3 w-full">
                 <img
                     src="https://fpt.ai/wp-content/uploads/2024/06/Banner_chamsockh_D-1.jpg"
@@ -94,7 +94,6 @@ const HomePage = () => {
                     </button>
                 </div>
             </div>
-            {/*  */}
             <CustomerCareBanner/>
             <ChatBubble/>
         </>

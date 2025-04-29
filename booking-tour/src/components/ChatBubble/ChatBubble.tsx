@@ -6,7 +6,6 @@ export default function ChatBubble() {
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {/* Nút chat */}
       <button
         onClick={() => setShowModal(!showModal)}
         className="relative flex items-center px-4 py-2 bg-gradient-to-r from-sky-400 to-blue-400 text-white rounded-full shadow-lg hover:scale-105 transition-transform"

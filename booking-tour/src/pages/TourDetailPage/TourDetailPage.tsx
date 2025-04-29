@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { FaMapMarkerAlt, FaClock, FaBusAlt } from "react-icons/fa";
+import RelatedTours from "../../components/RelatedTours/RelatedTours";
 
 const TourDetail = () => {
   const { id } = useParams();
@@ -142,7 +143,7 @@ const TourDetail = () => {
       </div>
       {/* Tour liên quan */}
       <div>
-        <h2>Tour Liên Quan</h2>
+        <RelatedTours currentRegion={tour.region} />
       </div>
       {/* Thông tin về bảo hiểm du lịch */}
       <div className="mt-5 text-gray-700">
