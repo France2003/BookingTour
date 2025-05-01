@@ -50,7 +50,7 @@ const HomePage = () => {
                 </div>
             </div>
             <div>
-                <DestinationTabs/>
+                <DestinationTabs />
             </div>
             <div className="relative mt-8 w-full">
                 <img
@@ -87,15 +87,17 @@ const HomePage = () => {
                     </h2>
                     <p className="text-[13px] leading-relaxed mb-4">
                         Hội viên chương trình “Hoa Mai Vàng” sẽ nhận được nhiều quyền lợi hấp dẫn tăng dần theo từng hạng thẻ sở hữu và có cơ hội đổi nhiều quà tặng giá trị,
-                         tour du lịch trọn gói từ kho quà tặng thuộc chương trình.
+                        tour du lịch trọn gói từ kho quà tặng thuộc chương trình.
                     </p>
                     <button className="bg-orange-500 hover:bg-orange-600 transition text-white px-4 py-2 rounded font-medium">
                         Xem thêm
                     </button>
                 </div>
             </div>
-            <CustomerCareBanner/>
-            <ChatBubble/>
+            <CustomerCareBanner />
+            <div className="chat">
+                <ChatBubble />
+            </div>
         </>
     );
 };

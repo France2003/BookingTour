@@ -154,7 +154,13 @@ const TourDetail = () => {
       </div>
       {/* //Đánh giá */}
       <ReviewSection tourId={tour!._id} existingReviews={tour?.reviews || []} />
-
+      <div className="mt-5 text-gray-700">
+        <h2 className="text-2xl font-bold mb-4">Lưu ý khi kết thúc tour</h2>
+        <p>Quý khách vui lòng lưu ý các thông tin sau khi tour kết thúc:</p>
+        <p>• Đối với tour du lịch bằng máy bay, quý khách sẽ được đưa ra sân bay để trở về điểm đón ban đầu.</p>
+        <p>• Đối với tour du lịch bằng xe khách, xe sẽ đưa quý khách trở lại điểm đón ban đầu.</p>
+        <p>• Đối với tour du lịch bằng xe máy, lịch trình linh hoạt và quý khách có thể chủ động sắp xếp lộ trình về.</p>
+      </div>
       {/* Thông tin về bảo hiểm du lịch */}
       <div className="mt-5 text-gray-700">
         <h2 className="text-[16px]  text-[#3D70A5] font-bold mb-4 underline  ">Thông tin bảo hiểm du lịch</h2>
