@@ -4,6 +4,7 @@ import { Button } from "antd";
 import { CheckCircle } from "lucide-react";
 import axios from "axios";
 import Timeline from "../../components/Timeline/Timeline";
+import { Helmet } from "react-helmet";
 
 const SuccessPaymentPage = () => {
     const [paymentDetails, setPaymentDetails] = useState<any>(null);
@@ -33,6 +34,11 @@ const SuccessPaymentPage = () => {
 
     return (
         <div className="px-[200px] pt-[620px] pb-20 bg-gradient-to-b from-blue-50 to-white min-h-screen">
+            <Helmet >
+                <meta charSet="utf-8" />
+                <title>Thanh toán thành công</title>
+                <link rel="canonical" href="http://mysite.com/example" />
+            </Helmet>
             <Timeline currentStep={4} />
             <div className="max-w-4xl mx-auto text-center">
                 <CheckCircle className="w-12 h-12 text-green-500 mx-auto" />

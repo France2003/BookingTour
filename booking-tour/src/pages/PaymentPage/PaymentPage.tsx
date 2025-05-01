@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import{ useState, useEffect } from "react";
 import { Modal, Button, notification } from "antd"; // Import notification từ antd
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -11,6 +11,7 @@ import Vcb from "../../assets/image/vcb.jpg";
 import Mb from "../../assets/image/mb.jpg";
 import Tech from "../../assets/image/tech.jpg";
 import Timeline from "../../components/Timeline/Timeline";
+import { Helmet } from "react-helmet";
 
 // Định nghĩa kiểu dữ liệu cho tour và booking
 interface Tour {
@@ -84,15 +85,13 @@ const PaymentPage = () => {
                 paymentInfo: method === "atm" ? bank : method === "momo" ? "momo" : "",
             });
 
-            // Thông báo thanh toán thành công bằng notification
             notification.success({
                 message: 'Thanh toán thành công!',
                 description: 'Chúc mừng bạn đã thanh toán thành công. Bạn sẽ được chuyển đến trang hoàn tất.',
                 placement: 'topRight', // Vị trí thông báo
-                duration: 3, // Thời gian hiển thị thông báo
+                duration: 3,
                 style: { backgroundColor: '#f6ffed', color: '#52c41a' }, // Màu sắc thông báo thành công
             });
-
             // Điều hướng tới trang hoàn tất
             navigate(`/hoan-tat/${id}`);
         } catch (error) {
@@ -100,16 +99,19 @@ const PaymentPage = () => {
             alert("Đã có lỗi xảy ra khi xác nhận thanh toán. Vui lòng thử lại.");
         }
     };
-
     const handleCancel = () => {
         navigate(-1);
     };
-
     const total = finalPayment;
     const passengers = state?.passengers || [];
 
     return (
         <div className="lg:px-24 px-[80px] pt-[620px] pb-20 py-20 bg-gradient-to-b from-blue-50 to-white min-h-screen">
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>Phương thức thanh toán</title>
+                <link rel="canonical" href="http://mysite.com/example" />
+            </Helmet>
             <Timeline currentStep={3} />
             <h2 className="text-2xl font-bold mb-8 text-center">Thanh toán</h2>
             <div className="mb-4">
@@ -202,7 +204,7 @@ const PaymentPage = () => {
                         </ul>
                         <p className="mt-4 text-lg font-bold text-red-600 flex items-center gap-2">
                             <DollarSign className="w-5 h-5 text-red-500" />
-                            Tổng thanh toán: {new Intl.NumberFormat("vi-VN").format(finalPayment)} ₫
+                            Tổng thanh toán: {new Intl.NumberFormat("vi-VN").format(finalPayment)} VNĐ
                         </p>
                     </div>
                 </>

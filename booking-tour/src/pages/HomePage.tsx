@@ -19,7 +19,7 @@ const HomePage = () => {
             <div>
                 <Border />
             </div>
-            <div className="p-4 px-[200px] space-y-4">
+            <div className="p-4 px-[150px] space-y-4">
                 <div className="w-full">
                     <img
                         src="https://saigontourist.net/media/upload/2025/4/23/57546211.png"

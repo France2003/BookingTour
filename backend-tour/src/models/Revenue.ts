@@ -10,5 +10,4 @@ const revenueSchema = new Schema<IRevenue>({
   date: { type: Date, required: true },
 });
 
-// Dùng named export cho Revenue
 export const Revenue = mongoose.model<IRevenue>("Revenue", revenueSchema);

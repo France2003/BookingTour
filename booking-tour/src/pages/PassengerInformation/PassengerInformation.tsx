@@ -5,6 +5,7 @@ import { MdAccessTime, MdCalendarToday, MdConfirmationNumber } from "react-icons
 import { CreditCard, DollarSign } from "lucide-react";
 import { FaBaby, FaChild, FaUser } from "react-icons/fa";
 import Timeline from "../../components/Timeline/Timeline";
+import { Helmet } from "react-helmet";
 
 const PassengerInformation = () => {
   const [booking, setBooking] = useState<any>(null);
@@ -84,9 +85,7 @@ const PassengerInformation = () => {
           contact,  // Nếu bạn có thông tin liên hệ cần gửi
         }
       );
-
       console.log("Dữ liệu hành khách đã được gửi thành công:", response.data);
-
       // Điều hướng đến trang thanh toán
       navigate(`/thanh-toan/${bookingId}`, {
         state: {
@@ -108,12 +107,7 @@ const PassengerInformation = () => {
       alert("Lỗi khi gửi thông tin hành khách.");
     }
   };
-
-
   console.log(passengers);
-
-
-
   if (loading) return <div className="text-center py-10">Đang tải thông tin...</div>;
   if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
   if (!booking) return <div className="text-center py-10 text-red-500">Không tìm thấy booking.</div>;
@@ -128,6 +122,11 @@ const PassengerInformation = () => {
   const finalPayment = booking.paymentType === "full" ? total : total / 2;
   return (
     <div className="px-[80px] pt-[620px] pb-20 bg-gradient-to-b from-blue-50 to-white min-h-screen">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Thông tin khách hàng</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       <Timeline currentStep={2} />
       <div className="bg-white p-4 rounded shadow">
         <h3 className="font-semibold text-lg mb-2">Thông tin liên hệ</h3>
@@ -356,7 +355,7 @@ const PassengerInformation = () => {
 
               <p className="mt-4 text-lg font-bold text-red-600 flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-red-500" />
-                Tổng thanh toán: {new Intl.NumberFormat("vi-VN").format(finalPayment)} ₫
+                Tổng thanh toán: {new Intl.NumberFormat("vi-VN").format(finalPayment)} VNĐ
               </p>
             </div>
           </div>

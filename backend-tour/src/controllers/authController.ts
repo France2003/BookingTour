@@ -3,7 +3,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import UserModel, { IUser } from "../models/UserModel";
 import User from "../models/UserModel";
-import { Booking } from "../models/Booking"; 
+import { Booking } from "../models/Booking";
+import { Types } from 'mongoose';
 // Đăng ký
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -109,17 +110,25 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
             res.status(404).json({ message: "Người dùng không tồn tại!" });
             return
         }
-        // Lấy lịch sử đặt tour
-        const bookings = await Booking.find({ userId })
-        .populate("tour", "title") // populate tên tour
-        .sort({ date: -1 })          // mới nhất trước
-        .lean();
-        console.log("Bookings:", bookings);
-        res.status(200).json({user, bookings});
-        return
+        const email = user.email; // Lấy email từ thông tin người dùng
+
+        if (!email) {
+            res.status(400).json({ message: "Không tìm thấy email của người dùng!" });
+            return;
+        }
+        // Lấy lịch sử đặt tour của người dùng theo email
+        const bookings = await Booking.find({ email })
+            .populate("tourId") // Lấy thông tin tour từ `tourId` trong `Booking`
+            .sort({ date: -1 })  // Sắp xếp theo ngày đặt tour, mới nhất trước
+            .lean();
+        console.log("Bookings:", bookings); // Kiểm tra dữ liệu bookings
+
+        // Trả về thông tin người dùng và bookings
+        res.status(200).json({ user, bookings });
+
     } catch (error) {
+        console.error("Lỗi server:", error);
         res.status(500).json({ message: "Lỗi server!", error });
-        return
     }
 };
 /// Cập nhật thông tin chi tiết của người dùng
@@ -169,6 +178,7 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
         res.status(500).json({ message: "Lỗi khi xóa người dùng", error });
     }
 };
+
 
 
 

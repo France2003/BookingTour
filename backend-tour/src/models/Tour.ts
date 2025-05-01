@@ -3,11 +3,6 @@ interface IProgram {
     day: number; 
     activities: string[];
 }
-
-// interface IService {
-//     name: string; // Tên dịch vụ
-//     description: string; // Mô tả dịch vụ
-// }
 export interface ITour extends Document {
     title: string;
     tour: string;
@@ -19,11 +14,11 @@ export interface ITour extends Document {
     duration: string;
     price: number;
     highlights: string[]
-    discount?: number; // Giảm giá (%)
+    discount?: number; 
     image: string;
     additionalImageUrls: string,
     rating?: number; // Trung bình đánh giá
-    reviews?: { user: string; comment: string; rating: number }[]; // Danh sách nhận xét
+    reviews: { user: string; comment: string; rating: number }[];
     startDate: Date; // Ngày bắt đầu
     endDate: Date; // Ngày kết thúc
     seatsAvailable: number; // Số chỗ còn trống
@@ -54,13 +49,16 @@ const TourSchema = new Schema<ITour>(
         image: { type: String, required: true },
         additionalImageUrls: [{ type: String }],
         rating: { type: Number, default: 5 }, // Mặc định đánh giá 5 sao
-        reviews: [
-            {
+        reviews: {
+            type: [
+              {
                 user: { type: String, required: true },
                 comment: { type: String, required: true },
                 rating: { type: Number, required: true },
-            },
-        ],
+              },
+            ],
+            default: [],
+          },
         startDate: { type: Date, required: true },
         endDate: { type: Date, required: true },
         seatsAvailable: { type: Number, required: true },

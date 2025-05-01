@@ -16,7 +16,8 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
             totalAmount,
             status,
             passengers,
-            contact
+            contact,
+            email,
         } = req.body;
 
         // Kiểm tra các thông tin bắt buộc
@@ -45,7 +46,8 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
             paymentMethod,
             status: status || 'pending', // Nếu không có status, mặc định là 'pending'
             passengers: passengers || [], // Nếu không có passengers, mặc định là mảng rỗng
-            contact: contact || {} // Nếu không có contact, mặc định là đối tượng rỗng
+            contact: contact || {}, // Nếu không có contact, mặc định là đối tượng rỗng
+            email
         });
 
         // ✅ Trả lại thông tin booking sau khi tạo thành công
@@ -63,6 +65,7 @@ export const createBooking = async (req: Request, res: Response): Promise<void> 
                 paymentType: newBooking.paymentType,
                 paymentMethod: newBooking.paymentMethod,
                 status: newBooking.status,
+                email: newBooking.email
             }
         });
 
@@ -111,7 +114,7 @@ export const getBookingById = async (req: Request, res: Response): Promise<void>
             babyPrice: tour?.babyPrice,  // Giá em bé từ Tour model
             createdAt: booking.createdAt,
             updatedAt: booking.updatedAt,
-            contact: booking.contact, 
+            contact: booking.contact,
             passengers: booking.passengers,  // Danh sách hành khách
         });
     } catch (error) {
@@ -199,6 +202,31 @@ export const updateBookingPayment = async (req: Request, res: Response): Promise
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Lỗi server khi cập nhật thanh toán." });
+    }
+};
+export const DeteleBooking = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        await Booking.findByIdAndDelete(id);
+        res.json({ message: "Booking đã được xóa thành công" });
+    } catch (error) {
+        console.error("❌ Lỗi khi xóa booking:", error);
+        res.status(500).json({ message: "Xóa booking thất bại" });
+    }
+};
+export const getBookingsByEmail = async (req: Request, res: Response): Promise<void> => {
+    const { email } = req.query;
+
+    if (!email || typeof email !== 'string') {
+        res.status(400).json({ message: "Email là bắt buộc và phải là chuỗi" });
+        return;
+    }
+    try {
+        const bookings = await Booking.find({ email });
+        res.json({ bookings });
+    } catch (err) {
+        console.error("Lỗi khi lấy bookings:", err);
+        res.status(500).json({ message: "Lỗi server", error: err });
     }
 };
 

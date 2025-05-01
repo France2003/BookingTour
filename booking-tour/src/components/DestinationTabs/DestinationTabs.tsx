@@ -60,7 +60,7 @@ export default function DestinationTabs() {
     const [region, setRegion] = useState<Region>("Bac");
 
     return (
-        <div className="px-[200px] mt-5 pb-20 bg-gradient-to-b from-blue-50 to-white min-h-screen">
+        <div className="px-[150px] mt-5 pb-20 bg-gradient-to-b from-blue-50 to-white min-h-screen">
             <h2 className="text-2xl font-bold mb-3 text-[#0069AD] text-center">
                 ĐIỂM DU LỊCH HẤP DẪN
             </h2>

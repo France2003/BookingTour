@@ -124,7 +124,6 @@ const Header = () => {
               <Link to="/"><NavbarItem label="Trải nghiệm" /></Link>
               <Link to="/"><NavbarItem label="Liên hệ" /></Link>
             </ul>
-
             {/* Icon User */}
             <div className="flex space-x-6 text-lg">
               <ModalSearch />

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import "react-toastify/dist/ReactToastify.css";
 import { toast, ToastContainer } from "react-toastify";
-
+import { Modal, message } from "antd";
 // Kiểu dữ liệu Booking
 interface Booking {
     _id: string;
@@ -21,12 +21,12 @@ interface Booking {
     paymentType: string;
     createdAt: string;
 }
-
 const AdminBookingsPage = () => {
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState<string>("");
-
+    const [isModalVisible, setIsModalVisible] = useState(false); // Điều khiển modal
+    const [bookingIdToDelete, setBookingIdToDelete] = useState<string>("");
     useEffect(() => {
         const fetchBookings = async () => {
             try {
@@ -35,9 +35,9 @@ const AdminBookingsPage = () => {
 
                 if (Array.isArray(allBookings)) {
                     const paidBookings = allBookings.filter(
-                        (booking: any) => 
-                            booking.paymentMethod && 
-                            booking.contact && 
+                        (booking: any) =>
+                            booking.paymentMethod &&
+                            booking.contact &&
                             typeof booking.contact.name === "string"
                     );
                     setBookings(paidBookings);
@@ -55,7 +55,23 @@ const AdminBookingsPage = () => {
 
         fetchBookings();
     }, []);
+    const showDeleteConfirm = (id: string) => {
+        setBookingIdToDelete(id);
+        setIsModalVisible(true);
+    };
+    const handleDeleteBooking = async () => {
+        if (!bookingIdToDelete) return;
 
+        try {
+            await axios.delete(`http://localhost:3001/api/bookings/${bookingIdToDelete}`);
+            setBookings((prev) => prev.filter((b) => b._id !== bookingIdToDelete)); // Cập nhật lại danh sách
+            message.success("Đã xóa đơn đặt tour thành công!");
+            setIsModalVisible(false); // Đóng modal
+        } catch (error) {
+            console.error("❌ Lỗi khi xóa booking:", error);
+            message.error("Xóa đơn đặt tour thất bại!");
+        }
+    };
     const filteredBookings = bookings.filter((booking) => {
         const name = booking.contact?.name || "";
         const id = booking._id || "";
@@ -133,7 +149,7 @@ const AdminBookingsPage = () => {
                                                 <button
                                                     className="text-red-500 hover:scale-110 transition-transform"
                                                     title="Xóa"
-                                                    onClick={() => { }}
+                                                    onClick={() => showDeleteConfirm(booking._id)}
                                                 >
                                                     <Trash2 size={18} />
                                                 </button>
@@ -144,9 +160,18 @@ const AdminBookingsPage = () => {
                             )}
                         </tbody>
                     </table>
+                    <Modal
+                        title="Xác nhận xóa"
+                        visible={isModalVisible}
+                        onOk={handleDeleteBooking}
+                        onCancel={() => setIsModalVisible(false)}
+                        okText="Xóa"
+                        cancelText="Hủy"
+                    >
+                        <p>Bạn có chắc chắn muốn xóa đơn đặt tour này không?</p>
+                    </Modal>
                 </div>
             )}
-
             <ToastContainer position="top-right" autoClose={2000} />
         </div>
     );

@@ -40,7 +40,7 @@ const TourNew = () => {
     }, [swiperInstance]);
 
     return (
-        <section className="container px-[200px] mx-auto  py-12 relative">
+        <section className="container px-[150px] mx-auto  py-12 relative">
             <motion.div
                 initial={{ opacity: 0, y: 50 }}  // Bắt đầu ẩn và dịch xuống 50px
                 whileInView={{ opacity: 1, y: 0 }} // Khi vào màn hình, xuất hiện từ dưới lên
@@ -51,7 +51,7 @@ const TourNew = () => {
                 <h2 className="text-3xl font-bold text-blue-700">
                     Chào mừng bạn đến với Đình Pháp – Cánh cửa mở ra những chuyến hành trình đáng nhớ!
                 </h2>
-                <hr className="w-[150px] text-[#FD8365] mt-[10px]" />
+                <hr className=" text-[#FD8365] mt-[10px]" />
                 <p className="text-gray-700 mt-4 max-w-3xl">
                     Bạn đang tìm kiếm một chuyến đi tuyệt vời để khám phá những điểm đến hấp dẫn? Hãy để Đình Pháp đồng hành cùng bạn!
                     Chúng tôi cung cấp các tour du lịch chất lượng, lịch trình hoạt động, dịch vụ tận tâm và giá cả hợp lý.
@@ -63,7 +63,7 @@ const TourNew = () => {
             <h3 className="text-3xl font-bold text-center text-blue-600 mb-6">TOUR NỔI BẬT</h3>
             <button
                 ref={prevRef}
-                className="absolute left-[180px] top-[500px] transform -translate-y-1/2 z-10 p-2 bg-gray-200 rounded-full shadow-lg hover:bg-gray-400 transition"
+                className="absolute left-[130px] top-[500px] transform -translate-y-1/2 z-10 p-2 bg-gray-200 rounded-full shadow-lg hover:bg-gray-400 transition"
             >
                 <FaChevronLeft className="text-xl text-gray-700" />
             </button>
@@ -72,11 +72,11 @@ const TourNew = () => {
                 initial={{ opacity: 0, y: 50 }}  // Bắt đầu ẩn và dịch xuống 50px
                 whileInView={{ opacity: 1, y: 0 }} // Khi vào màn hình, xuất hiện từ dưới lên
                 transition={{ duration: 0.8, ease: "easeOut" }} // Hiệu ứng mượt
-                viewport={{ once: true }} // Chỉ chạy 1 lần
+                viewport={{ once: true }} 
             >
                 <Swiper
                     modules={[Navigation, Pagination]}
-                    spaceBetween={10}
+                    spaceBetween={20}
                     slidesPerView={1}
                     navigation={{ prevEl: prevRef.current, nextEl: nextRef.current }}
                     loop={true}
@@ -92,7 +92,7 @@ const TourNew = () => {
                                 initial={{ opacity: 0, scale: 0.9 }}  // Hình ảnh bắt đầu mờ và nhỏ
                                 whileInView={{ opacity: 1, scale: 1 }} // Hình ảnh phóng to và mờ dần
                                 transition={{ duration: 0.8, ease: "easeOut" }}
-                                className="bg-white shadow-lg rounded-lg overflow-hidden w-[370px] h-[450px] relative group"
+                                className="bg-white shadow-lg  rounded-lg overflow-hidden w-[410px] h-[450px] relative group"
                             >
                                 <div className="overflow-hidden rounded-t-lg">
                                     <img
@@ -104,7 +104,7 @@ const TourNew = () => {
 
                                 <div className="absolute top-3 right-[-3px] bg-orange-400 opacity-95 text-white text-right text-[13px] font-bold px-3 py-2 rounded-lg shadow-md">
                                     Giá từ <br />
-                                    <span>{tour.price}</span> <br />
+                                    <span>{Number(tour.price).toLocaleString("vi-VN")} VNĐ</span> <br />
                                     <span>{tour.duration}</span>
                                 </div>
                                 <div className="p-4">
@@ -137,7 +137,7 @@ const TourNew = () => {
 
             <button
                 ref={nextRef}
-                className="absolute right-[180px] top-[500px] transform -translate-y-1/2 z-10 p-2 bg-gray-200 rounded-full shadow-lg hover:bg-gray-400 transition"
+                className="absolute right-[130px] top-[500px] transform -translate-y-1/2 z-10 p-2 bg-gray-200 rounded-full shadow-lg hover:bg-gray-400 transition"
             >
                 <FaChevronRight className="text-xl text-gray-700" />
             </button>

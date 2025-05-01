@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { FaMapMarkerAlt, FaClock, FaBusAlt } from "react-icons/fa";
 import RelatedTours from "../../components/RelatedTours/RelatedTours";
+import ReviewSection from "../../components/Review/ReviewSection";
+import { Helmet } from "react-helmet";
 
 const TourDetail = () => {
   const { id } = useParams();
@@ -30,6 +32,11 @@ const TourDetail = () => {
 
   return (
     <div className="px-[80px] pt-[620px] pb-20 bg-gradient-to-b from-blue-50 to-white min-h-screen">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Tour {tour.title}</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       <div className="relative mb-3">
         <h1 className="text-4xl w-full  bg-[#1B2426] p-[25px] opacity-80 absolute mt-[270px] z-100 font-bold text-white mb-6">{tour.title}</h1>
         <img
@@ -132,7 +139,7 @@ const TourDetail = () => {
                   />
                 </div>
               ) : (
-                <p className="text-sm text-gray-500 mt-2">Không có ảnh cho ngày này</p>
+                <p className="text-sm text-gray-500 mt-2"></p>
               )}
             </div>
           ))
@@ -145,6 +152,9 @@ const TourDetail = () => {
       <div>
         <RelatedTours currentRegion={tour.region} />
       </div>
+      {/* //Đánh giá */}
+      <ReviewSection tourId={tour!._id} existingReviews={tour?.reviews || []} />
+
       {/* Thông tin về bảo hiểm du lịch */}
       <div className="mt-5 text-gray-700">
         <h2 className="text-[16px]  text-[#3D70A5] font-bold mb-4 underline  ">Thông tin bảo hiểm du lịch</h2>

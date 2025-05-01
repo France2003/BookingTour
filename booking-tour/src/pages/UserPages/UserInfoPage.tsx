@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Form, Input, Button, DatePicker, Select, message, Avatar } from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
+import { Helmet } from "react-helmet";
 
 const { Option } = Select;
 
@@ -54,6 +55,11 @@ const UserInfoPage = () => {
 
   return (
     <div className="max-w-5xl  mx-auto mt-12 bg-white shadow-md p-8 rounded-lg">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Thông Tin Người Dùng</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       <h2 className="text-3xl font-semibold mb-8 text-center">Hồ Sơ Người Dùng</h2>
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -5,6 +5,7 @@ import Timeline from "../../components/Timeline/Timeline";
 import { FaUser, FaChild, FaBaby } from "react-icons/fa";
 import { MdCalendarToday, MdAccessTime, MdConfirmationNumber } from "react-icons/md";
 import Checkbox, { CheckboxProps } from "antd/es/checkbox/Checkbox";
+import { Helmet } from "react-helmet";
 
 const CustomerInfoForm = () => {
     const { id } = useParams();
@@ -46,6 +47,8 @@ const CustomerInfoForm = () => {
             alert("Vui lòng chọn phương thức thanh toán và đồng ý điều khoản.");
             return;
         }
+        const email = localStorage.getItem("userEmail");
+        console.log(email);
         // Chỉ gửi các thông tin cơ bản cần thiết
         const bookingData = {
             tourId: tour._id,
@@ -53,13 +56,14 @@ const CustomerInfoForm = () => {
             children,
             babies,
             paymentType,
-            paymentMethod: selectedPaymentMethod,totalAmount, 
-            status: 'pending', 
-            
+            paymentMethod: selectedPaymentMethod, totalAmount,
+            status: 'pending',
+            email,
+
         };
         console.log(bookingData);
         try {
-            console.log("Dữ liệu gửi lên API:", bookingData); 
+            console.log("Dữ liệu gửi lên API:", bookingData);
             const response = await axios.post('http://localhost:3001/api/bookings', bookingData, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,6 +72,7 @@ const CustomerInfoForm = () => {
             const bookingId = response.data._id;
             history(`/passenger-info/${bookingId}`, {
                 state: {
+                    email,
                     adults,
                     children,
                     babies,
@@ -113,6 +118,11 @@ const CustomerInfoForm = () => {
     if (!tour) return <div className="text-center py-10 text-red-500">Không tìm thấy thông tin tour.</div>;
     return (
         <div className="px-[80px] pt-[620px] pb-20 bg-gradient-to-b from-blue-50 to-white min-h-screen">
+            <Helmet>
+                <meta charSet="utf-8" />
+                <title>Chọn dịch vụ</title>
+                <link rel="canonical" href="http://mysite.com/example" />
+            </Helmet>
             <Timeline currentStep={1} />
             <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Left section: Passenger count and payment */}

@@ -34,6 +34,7 @@ export interface IBooking extends Document {
     contact?: Contact;
     createdAt: Date;
     updatedAt: Date;
+    email?: string; // Thêm trường email vào IBooking
 }
 
 const passengerSchema = new Schema<Passenger>(
@@ -79,6 +80,7 @@ const bookingSchema = new Schema<IBooking>(
         passengers: { type: [passengerSchema], default: [], required: false },
         paymentInfo: { type: String, default: "" },
         contact: { type: contactSchema, default: {}, required: false },
+        email: { type: String, required: true },
     },
     { timestamps: true }
 );

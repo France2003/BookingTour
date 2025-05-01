@@ -8,12 +8,12 @@ export default function ViewTour() {
     const { id } = useParams(); // Lấy tourId từ URL
     const [tour, setTour] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-
+    const [reviews, setReviews] = useState<any[]>([]);
     useEffect(() => {
         const fetchTour = async () => {
             try {
                 const response = await axios.get(`http://localhost:3001/api/tours/${id}`);
-                console.log('Tour data:', response.data);  // Log toàn bộ thông tin tour
+                console.log('Tour data:', response.data);
                 setTour(response.data);
             } catch (error) {
                 notification.error({
@@ -29,8 +29,20 @@ export default function ViewTour() {
             fetchTour();
         }
     }, [id]);
+    // useEffect(() => {
+    //     const fetchReviews = async () => {
+    //         try {
+    //             const res = await axios.get(`http://localhost:3001/api/reviews/${id}`);
+    //             setReviews(res.data);
+    //         } catch (error) {
+    //             console.error("Lỗi khi lấy đánh giá", error);
+    //         }
+    //     };
 
-
+    //     if (id) {
+    //         fetchReviews();
+    //     }
+    // }, [id])
     if (loading) {
         return (
             <div className="flex justify-center items-center">
@@ -43,7 +55,6 @@ export default function ViewTour() {
         return <div>Không tìm thấy tour!</div>;
     }
     console.log('URL ảnh tour:', tour.image);
-
     return (
         <div className="p-6 bg-white shadow-lg rounded-lg max-w-4xl mx-auto">
             <Helmet>
@@ -145,6 +156,33 @@ export default function ViewTour() {
                         ))
                     ) : (
                         <p>Không có chương trình tour</p>
+                    )}
+                </div>
+                <h3 className="text-xl font-bold mt-6">Đánh Giá Tour</h3>
+                <div className="mt-4">
+                    <strong>Điểm Đánh Giá:</strong>{" "}
+                    {tour.rating ? tour.rating.toFixed(1) : "Chưa có"}
+                </div>
+                <div className="mt-8">
+                    {tour.reviews && tour.reviews.length > 0 ? (
+                        tour.reviews.map((review: any, index: number) => (
+                            <div key={index} className="p-4 border rounded bg-gray-50">
+                                <p className="font-semibold text-blue-600">{review.user}</p>
+                                <div className="flex items-center mb-1">
+                                    {Array.from({ length: 5 }, (_, i) => (
+                                        <span
+                                            key={i}
+                                            className={`text-lg ${i < review.rating ? "text-yellow-400" : "text-gray-300"}`}
+                                        >
+                                            ★
+                                        </span>
+                                    ))}
+                                </div>
+                                <p>{review.comment}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-gray-500">Chưa có đánh giá nào cho tour này.</p>
                     )}
                 </div>
             </Card>

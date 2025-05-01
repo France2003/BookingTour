@@ -46,6 +46,11 @@ export const getTourById = async (req: Request, res: Response): Promise<void> =>
     try {
         const tourId = req.params.id;
         console.log('Request for tour with ID:', tourId);  // Log ID
+        // Kiểm tra nếu tourId có hợp lệ không
+        if (!mongoose.Types.ObjectId.isValid(tourId)) {
+            res.status(400).json({ message: "ID không hợp lệ" });
+            return;
+        }
         const tour = await Tour.findById(tourId);
 
         if (!tour) {
@@ -271,7 +276,6 @@ export const deleteTour = async (req: Request, res: Response): Promise<void> => 
         res.status(500).json({ message: "Lỗi khi xóa tour", error });
     }
 };
-// Cập nhật trạng thái tour thành 'completed'
 export const markTourAsCompleted = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;

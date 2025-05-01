@@ -8,7 +8,7 @@ import bookingRoutes from "./routes/bookingRouters";
 import cors from "cors";
 import { createAdminAccount } from "./utils/createAdmin";
 import { getTourById, updateTourStatus } from "./controllers/tourController";
-import paymentRoutes from "./routes/paymentRoutes";
+import reviewRoutes from "./routes/review";
 dotenv.config();
 const app: Application = express(); // 👈 Định nghĩa kiểu dữ liệu rõ ràng
 const PORT: number = parseInt(process.env.PORT || "3001", 10); // 👈 Chuyển đổi kiểu dữ liệu từ string -> number
@@ -40,6 +40,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.get('/api/tours/:id', getTourById);
 app.patch('/api/tours/:id/status', updateTourStatus);
+app.use("/api/reviews", reviewRoutes);
 app.listen(PORT, () => {
     console.log(`🚀 Server is running on port: ${PORT}`);
 });

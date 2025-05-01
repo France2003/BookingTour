@@ -5,6 +5,9 @@ interface IBooking {
     title: string;
   };
   createdAt: string;
+  tourId: mongoose.Schema.Types.ObjectId; 
+  date: Date;
+  amount: number;
 }
 
 export interface IUser extends Document {
@@ -33,6 +36,7 @@ const UserSchema = new Schema<IUser>({
   address: { type: String },
   city: { type: String },
   avatar: { type: String },
+  bookings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Booking" }]
 });
 
 const UserModel = mongoose.model<IUser>("User", UserSchema);

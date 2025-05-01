@@ -1,27 +1,36 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { FaPlus, FaEdit, FaTrash, FaSearch, FaCheck, FaEye } from "react-icons/fa";
-import { Modal, message } from "antd";
+import {
+  FaPlus,
+  FaEdit,
+  FaTrash,
+  FaSearch,
+  FaEye
+} from "react-icons/fa";
+import { Modal, message, Pagination } from "antd"; // 👉 Đã thêm Pagination
 import TourStatus from "./TourStatus";
 import { Helmet } from "react-helmet";
 
-// 🟢 1️⃣ Định nghĩa kiểu dữ liệu Tour
+// 🟢 1️⃣ Kiểu dữ liệu Tour
 interface Tour {
-  _id: string;  // Sử dụng _id kiểu string cho MongoDB ObjectId
+  _id: string;
   title: string;
   startDate: string;
   endDate: string;
   createdAt: string;
-  status: 'active' | 'booked' | 'completed';
+  status: "active" | "booked" | "completed";
 }
 
 export default function TourManagement() {
-  // 🟢 2️⃣ Khai báo state với kiểu dữ liệu Tour[]
   const [tours, setTours] = useState<Tour[]>([]);
   const [search, setSearch] = useState("");
-  const [isModalVisible, setIsModalVisible] = useState(false);  // Để điều khiển hiển thị modal
-  const [tourIdToDelete, setTourIdToDelete] = useState<string>(""); // Lưu ID của tour cần xóa
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [tourIdToDelete, setTourIdToDelete] = useState<string>("");
+
+  // 🟣 Phân trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   useEffect(() => {
     fetchTours();
@@ -35,77 +44,63 @@ export default function TourManagement() {
       console.error("Lỗi khi lấy danh sách tour", error);
     }
   }
-  // Phương thức cập nhật trạng thái tour tự động khi có booking
-  const handleTourBooked = async (tourId: string) => {
-    try {
-      const response = await axios.patch(`/api/tours/${tourId}/status`, { status: "booked" });
-      message.success("Cập nhật trạng thái tour thành 'Đã đặt'!");
-      fetchTours();  // Lấy lại danh sách tour để cập nhật dữ liệu
-    } catch (error) {
-      message.error("Cập nhật trạng thái tour thất bại.");
-    }
-  };
 
-  // Khi booking thành công, bạn sẽ gọi phương thức này
-  const handleBookingSuccess = async (tourId: string) => {
-    await handleTourBooked(tourId); // Tự động thay đổi trạng thái thành "Đã đặt"
-  };
   function showDeleteConfirm(id: string) {
     setTourIdToDelete(id);
     setIsModalVisible(true);
   }
+
   function handleCancel() {
     setIsModalVisible(false);
-    setTourIdToDelete("");  // Xóa ID tour đã chọn
+    setTourIdToDelete("");
   }
-  // Xử lý xóa tour
+
   async function deleteTour() {
     if (tourIdToDelete) {
       try {
-        const token = localStorage.getItem("accessToken"); // Lấy token từ localStorage
-
-        if (!token) {
-          console.log("Không tìm thấy accessToken");
-          return;
-        }
+        const token = localStorage.getItem("accessToken");
+        if (!token) return;
 
         await axios.delete(`/api/tours/${tourIdToDelete}`, {
-          headers: {
-            Authorization: `Bearer ${token}`, // Gửi token trong header
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        // Hiển thị thông báo thành công
         message.success("Xóa tour thành công!");
-        fetchTours(); // Làm mới danh sách tour sau khi xóa thành công
-        handleCancel();  // Đóng modal
+        fetchTours();
+        handleCancel();
       } catch (error) {
         console.error("Lỗi khi xóa tour", error);
         message.error("Lỗi khi xóa tour");
       }
     }
   }
-  async function updateTourStatus(tourId: string, status: 'active' | 'booked' | 'completed') {
+
+  async function updateTourStatus(tourId: string, status: Tour["status"]) {
     try {
-      const response = await axios.patch(`/api/tours/${tourId}/status`, { status });
+      await axios.patch(`/api/tours/${tourId}/status`, { status });
       message.success("Cập nhật trạng thái tour thành công!");
-      fetchTours();  // Làm mới danh sách tour sau khi cập nhật
+      fetchTours();
     } catch (error) {
       message.error("Lỗi khi cập nhật trạng thái tour!");
     }
   }
-  // Lọc danh sách tour theo tiêu đề (hoặc thêm các trường khác nếu muốn)
+
   const filteredTours = tours.filter((tour) =>
     tour.title.toLowerCase().includes(search.toLowerCase())
   );
+
+  const paginatedTours = filteredTours.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
-      {/* Header */}
       <Helmet>
         <meta charSet="utf-8" />
         <title>Quản Lí Tour</title>
-        <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
+
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Quản Lý Tour</h1>
         <Link
@@ -116,7 +111,6 @@ export default function TourManagement() {
         </Link>
       </div>
 
-      {/* Thanh tìm kiếm */}
       <div className="mb-6">
         <div className="relative w-full md:w-1/3">
           <input
@@ -124,13 +118,15 @@ export default function TourManagement() {
             placeholder="Tìm kiếm tour..."
             className="border border-gray-300 rounded-lg p-2 pl-10 w-full shadow-sm focus:ring-2 focus:ring-blue-400"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setCurrentPage(1); // Reset về trang đầu khi tìm kiếm
+            }}
           />
           <FaSearch className="absolute left-3 top-3 text-gray-500" />
         </div>
       </div>
 
-      {/* Danh sách tour */}
       <div className="bg-white p-6 shadow-md rounded-xl overflow-x-auto">
         <table className="min-w-full text-left border-collapse">
           <thead>
@@ -145,13 +141,19 @@ export default function TourManagement() {
             </tr>
           </thead>
           <tbody>
-            {filteredTours.length > 0 ? (
-              filteredTours.map((tour, index) => (
+            {paginatedTours.length > 0 ? (
+              paginatedTours.map((tour, index) => (
                 <tr key={tour._id} className="border-b hover:bg-gray-100 text-sm">
-                  <td className="p-3 text-center font-semibold">{index + 1}</td>
+                  <td className="p-3 text-center font-semibold">
+                    {(currentPage - 1) * pageSize + index + 1}
+                  </td>
                   <td className="p-3">{tour.title}</td>
-                  <td className="p-3">{new Date(tour.startDate).toLocaleDateString("vi-VN")}</td>
-                  <td className="p-3">{new Date(tour.endDate).toLocaleDateString("vi-VN")}</td>
+                  <td className="p-3">
+                    {new Date(tour.startDate).toLocaleDateString("vi-VN")}
+                  </td>
+                  <td className="p-3">
+                    {new Date(tour.endDate).toLocaleDateString("vi-VN")}
+                  </td>
                   <td className="p-3">
                     {new Date(tour.createdAt).toLocaleString("vi-VN", {
                       day: "2-digit",
@@ -166,7 +168,7 @@ export default function TourManagement() {
                   <td className="p-3 text-center">
                     <TourStatus tourId={tour._id} currentStatus={tour.status} />
                   </td>
-                  <td className="p-3 flex justify-center h-[100px] items-center gap-4">
+                  <td className="p-3 flex justify-center items-center gap-4">
                     <Link to={`/admin/tours/view/${tour._id}`} className="text-blue-500 hover:text-blue-600">
                       <FaEye size={18} />
                     </Link>
@@ -190,8 +192,18 @@ export default function TourManagement() {
               </tr>
             )}
           </tbody>
-
         </table>
+
+        {/* 🔵 Pagination */}
+        <div className="mt-4 flex justify-end">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={filteredTours.length}
+            onChange={(page) => setCurrentPage(page)}
+            showSizeChanger={false}
+          />
+        </div>
       </div>
 
       {/* Modal xác nhận xóa */}
@@ -207,5 +219,4 @@ export default function TourManagement() {
       </Modal>
     </div>
   );
-
 }

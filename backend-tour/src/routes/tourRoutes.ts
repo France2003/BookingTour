@@ -17,5 +17,4 @@ router.put("/:id", verifyToken, isAdmin, updateTour);
 // ✅ Xóa tour (Chỉ admin)
 router.delete("/:id", verifyToken, isAdmin, deleteTour);
 router.patch('/:id/status', updateTourStatus);
-
 export default router;

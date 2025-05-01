@@ -29,6 +29,7 @@ import PaymentPage from './pages/PaymentPage/PaymentPage'
 import SuccessPaymentPage from './pages/SuccessPaymentPage/SuccessPaymentPage'
 import AdminBookingsPage from './pages/AdminPages/AdminBookingsPage'
 import BookingDetailPage from './pages/AdminPages/BookingDetailPage'
+import SearchResults from './pages/SearchResults/SearchResults'
 function App() {
   return (
     <>
@@ -54,6 +55,7 @@ function App() {
             <Route path="/tour-mien-trung" element={<TourMienTrungPage />} />
             <Route path="/tour-mien-nam" element={<TourMienNamPage />} />
             <Route path="/:slug" element={<TravelDestinationsDetail />} />
+            <Route path="/search" element={<SearchResults />} />
           </Route>
           <Route path="/users/:id" element={<UserInfoPage />} />
           <Route path='/admin' element={<AdminLayout />}>
