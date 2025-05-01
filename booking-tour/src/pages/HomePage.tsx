@@ -10,7 +10,7 @@ const HomePage = () => {
         <>
             <Helmet>
                 <meta charSet="utf-8" />
-                <title>Home Page</title>
+                <title>Trang chủ</title>
                 <link rel="canonical" href="http://mysite.com/example" />
             </Helmet>
             <div className="mt-[590px]">

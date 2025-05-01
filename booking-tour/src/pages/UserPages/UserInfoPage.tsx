@@ -3,13 +3,53 @@ import { Form, Input, Button, DatePicker, Select, message, Avatar } from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
 import { Helmet } from "react-helmet";
+import {
+  Calendar,
+  MapPin,
+  Navigation,
+  Clock,
+  Bus,
+  CreditCard,
+  FileText,
+} from "lucide-react";
+interface ITour {
+  _id: string;
+  title: string;
+  location: string;
+  destination: string;
+  startDate: Date;
+  endDate: Date;
+  vehicle: string;
+  duration: string;
+}
 
+interface IBooking {
+  _id: string;
+  date: string;
+  amount: number;
+  tourId: ITour;
+
+}
+interface IUser {
+  _id: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  birthdate?: string;
+  gender?: string;
+  address?: string;
+  city?: string;
+  avatar?: string;
+  role?: "user" | "admin";
+  bookings?: IBooking[]; // Danh sách đơn đặt tour
+}
 const { Option } = Select;
 
 const UserInfoPage = () => {
   const [form] = Form.useForm();
   const [userId, setUserId] = useState("");
-
+  const [bookings, setBookings] = useState<IBooking[]>([]);
+  const [userData, setUserData] = useState<IUser | null>(null);
   useEffect(() => {
     fetchUser();
   }, []);
@@ -19,9 +59,12 @@ const UserInfoPage = () => {
       const storedEmail = localStorage.getItem("userEmail");
       const res = await axios.get("http://localhost:3001/api/auth/users");
       const user = res.data.find((u: any) => u.email === storedEmail);
-
+      const bookingsRes = await axios.get(`http://localhost:3001/api/auth/users/${user._id}`);
+      setUserData(res.data.user);
+      const userBookings = bookingsRes.data.bookings || [];
+      setBookings(userBookings);
+      console.log("hsdhjdf", userBookings);
       if (!user) return message.error("Không tìm thấy người dùng!");
-
       setUserId(user._id);
       form.setFieldsValue({
         name: user.name,
@@ -36,6 +79,7 @@ const UserInfoPage = () => {
     } catch (err) {
       message.error("Không thể lấy dữ liệu người dùng!");
     }
+
   };
 
   const handleSubmit = async (values: any) => {
@@ -122,6 +166,31 @@ const UserInfoPage = () => {
               Định dạng: JPEG, PNG
             </p>
           </div>
+        </div>
+        <div className="border-t pt-2">
+          <h3 className="text-2xl font-semibold mb-2">Tour đã đặt</h3>
+          {bookings.length > 0 ? (
+            <ul className="space-y-6">
+              {bookings.map((booking) => {
+                const tour = booking.tourId;
+                return (
+                  <li key={booking._id} className="bg-gray-50 p-4 rounded-md shadow-sm">
+                    <p className="flex items-center gap-2"><FileText size={16} /> <strong>Tên tour:</strong> {tour?.title || "Không xác định"}</p>
+                    <p className="flex items-center gap-2"><MapPin size={16} /> <strong>Địa điểm:</strong> {tour?.location || "Chưa có thông tin"}</p>
+                    <p className="flex items-center gap-2"><Navigation size={16} /> <strong>Điểm đến:</strong> {tour?.destination || "Chưa có mô tả"}</p>
+                    <p className="flex items-center gap-2"><Clock size={16} /> <strong>Thời gian:</strong> {tour?.duration || "Chưa có mô tả"}</p>
+                    <p className="flex items-center gap-2"><Bus size={16} /> <strong>Phương tiện:</strong> {tour?.vehicle || "Chưa có mô tả"}</p>
+                    <p className="flex items-center gap-2"><Calendar size={16} /> <strong>Ngày đi:</strong> {tour?.startDate ? new Date(tour.startDate).toLocaleDateString() : "Không rõ"}</p>
+                    <p className="flex items-center gap-2"><Calendar size={16} /> <strong>Ngày về:</strong> {tour?.endDate ? new Date(tour.endDate).toLocaleDateString() : "Không rõ"}</p>
+                    <p className="flex items-center gap-2"><Calendar size={16} /> <strong>Ngày đặt:</strong> {new Date(booking.date).toLocaleDateString()}</p>
+                    <p className="flex items-center gap-2"><CreditCard size={16} /> <strong>Tổng tiền:</strong> {booking.amount.toLocaleString()} VNĐ</p>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            <p className="text-gray-500">Chưa có lịch sử đặt tour.</p>
+          )}
         </div>
       </Form>
     </div>

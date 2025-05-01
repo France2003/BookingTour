@@ -166,7 +166,7 @@ export default function ViewTour() {
                 <div className="mt-8">
                     {tour.reviews && tour.reviews.length > 0 ? (
                         tour.reviews.map((review: any, index: number) => (
-                            <div key={index} className="p-4 border rounded bg-gray-50">
+                            <div key={index} className="p-4 mb-3 border rounded bg-gray-50">
                                 <p className="font-semibold text-blue-600">{review.user}</p>
                                 <div className="flex items-center mb-1">
                                     {Array.from({ length: 5 }, (_, i) => (
