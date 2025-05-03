@@ -1,4 +1,0 @@
-Quản lý state bằng Redux Toolkit:
-    Lưu danh sách tour
-    Quản lý thông tin người dùng
-    Quản lý đơn đặt tour
