@@ -29,20 +29,6 @@ export default function ViewTour() {
             fetchTour();
         }
     }, [id]);
-    // useEffect(() => {
-    //     const fetchReviews = async () => {
-    //         try {
-    //             const res = await axios.get(`http://localhost:3001/api/reviews/${id}`);
-    //             setReviews(res.data);
-    //         } catch (error) {
-    //             console.error("Lỗi khi lấy đánh giá", error);
-    //         }
-    //     };
-
-    //     if (id) {
-    //         fetchReviews();
-    //     }
-    // }, [id])
     if (loading) {
         return (
             <div className="flex justify-center items-center">

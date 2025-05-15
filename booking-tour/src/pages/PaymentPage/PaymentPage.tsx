@@ -5,7 +5,6 @@ import axios from "axios";
 import { MdConfirmationNumber, MdCalendarToday, MdAccessTime } from "react-icons/md";
 import { FaUser, FaChild, FaBaby } from "react-icons/fa";
 import { CreditCard, DollarSign } from "lucide-react";
-
 import Momo from "../../assets/image/momo.jpg";
 import Vcb from "../../assets/image/vcb.jpg";
 import Mb from "../../assets/image/mb.jpg";
@@ -47,8 +46,6 @@ const PaymentPage = () => {
 
     useEffect(() => {
         if (state && state.tour && state.booking) {
-            console.log("Dữ liệu state:", state);
-            console.log("Thông tin liên hệ:", state.contact);
             setContact(state.contact || {});
             setTour(state.tour);
             setBooking(state.booking);
@@ -59,7 +56,6 @@ const PaymentPage = () => {
             }
         }
     }, [state]);
-
     const generateQR = () => {
         if (method === "momo") return Momo;
         if (method === "atm" && bank) {
@@ -78,13 +74,11 @@ const PaymentPage = () => {
             alert("Vui lòng chọn ngân hàng trước khi thanh toán.");
             return;
         }
-
         try {
             await axios.patch(`http://localhost:3001/api/bookings/${id}`, {
                 paymentMethod: method,
                 paymentInfo: method === "atm" ? bank : method === "momo" ? "momo" : "",
             });
-
             notification.success({
                 message: 'Thanh toán thành công!',
                 description: 'Chúc mừng bạn đã thanh toán thành công. Bạn sẽ được chuyển đến trang hoàn tất.',

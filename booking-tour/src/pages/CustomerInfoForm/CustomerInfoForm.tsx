@@ -40,9 +40,6 @@ const CustomerInfoForm = () => {
         }
     }, [paymentType, adults, children, babies, tour]);
     const handleSubmitBooking = async () => {
-        console.log("isAgreed:", isAgreed);
-        console.log("selectedPaymentMethod:", selectedPaymentMethod);
-
         if (!selectedPaymentMethod || !isAgreed) {
             alert("Vui lòng chọn phương thức thanh toán và đồng ý điều khoản.");
             return;
@@ -59,7 +56,6 @@ const CustomerInfoForm = () => {
             paymentMethod: selectedPaymentMethod, totalAmount,
             status: 'pending',
             email,
-
         };
         console.log(bookingData);
         try {
@@ -125,7 +121,6 @@ const CustomerInfoForm = () => {
             </Helmet>
             <Timeline currentStep={1} />
             <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Left section: Passenger count and payment */}
                 <div className="md:col-span-2 space-y-6">
                     <div>
                         <h2 className="text-xl font-bold">SỐ LƯỢNG HÀNH KHÁCH</h2>
@@ -181,7 +176,6 @@ const CustomerInfoForm = () => {
                         <p className="mt-2 text-sm font-semibold">
                             Sau khi đặt cọc, quý khách vui lòng hoàn tất thanh toán trong <span className="font-bold">48h</span>
                         </p>
-                        <p className="text-red-500 text-sm mt-1">* Chỉ áp dụng cho thành viên saigontourist.net</p>
                         <p className="text-red-500 text-sm">* Chỉ áp dụng cho thanh toán online hoặc đặt cọc</p>
                         <div className="flex items-center mt-4 space-x-2">
                             <input

@@ -17,7 +17,7 @@ const SuccessPaymentPage = () => {
         axios
             .get(`http://localhost:3001/api/bookings/${id}`)
             .then((response) => {
-                console.log("Dữ liệu trả về từ API:", response.data);  // In ra dữ liệu trả về từ API
+                console.log("Dữ liệu trả về từ API:", response.data);
                 setPaymentDetails(response.data);
                 setLoading(false);
             })

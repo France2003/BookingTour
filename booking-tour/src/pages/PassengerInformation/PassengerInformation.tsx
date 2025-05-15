@@ -30,20 +30,17 @@ const PassengerInformation = () => {
     }
     const fetchBooking = async () => {
       try {
-        const res = await axios.get(`http://localhost:3001/api/bookings/${bookingId}`);
-        console.log(res.data); // Kiểm tra dữ liệu nhận được từ API
-
+        const res = await axios.get(`http://localhost:3001/api/bookings/${bookingId}`); 
+        console.log(res.data);  // Kiểm tra dữ liệu nhận được từ API
         // Kiểm tra nếu phản hồi có dữ liệu hợp lệ
         if (res.data && res.data.adults !== undefined && res.data.children !== undefined && res.data.babies !== undefined) {
-          setBooking(res.data);
-
+          setBooking(res.data); // Lưu thông tin booking vào state
           // Tạo danh sách hành khách từ dữ liệu booking
           const totalPassengers = [
             ...Array(res.data.adults).fill({ type: "adult", name: "", gender: "", firstName: "", phone: "", address: "", passport: "" }),
             ...Array(res.data.children).fill({ type: "child", name: "", gender: "", firstName: "", phone: "", address: "", passport: "" }),
             ...Array(res.data.babies).fill({ type: "baby", name: "", gender: "", firstName: "", phone: "", address: "", passport: "" }),
           ];
-
           setPassengers(totalPassengers);
         } else {
           setError("Không tìm thấy thông tin booking.");
@@ -54,10 +51,8 @@ const PassengerInformation = () => {
         setLoading(false);
       }
     };
-
     fetchBooking();
   }, [bookingId]);
-
   const handleChange = (index: number, field: string, value: string) => {
     setPassengers((prevPassengers) => {
       const updatedPassengers = [...prevPassengers]; // Sao chép mảng hành khách hiện tại
@@ -70,12 +65,10 @@ const PassengerInformation = () => {
     const isValid = passengers.every(
       (p) => p.name && p.gender && p.firstName && p.phone && p.address && p.passport
     );
-
     if (!isValid) {
       alert("Vui lòng điền đầy đủ thông tin hành khách.");
       return;
     }
-
     try {
       // Gửi yêu cầu tới backend để thêm thông tin hành khách
       const response = await axios.post(
@@ -111,6 +104,7 @@ const PassengerInformation = () => {
   if (loading) return <div className="text-center py-10">Đang tải thông tin...</div>;
   if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
   if (!booking) return <div className="text-center py-10 text-red-500">Không tìm thấy booking.</div>;
+
   const adultPrice = Number(booking.amount) || 0;
   const childPrice = Number(booking.tourId?.childPrice) || 0;
   const babyPrice = Number(booking.tourId?.babyPrice) || 0;
@@ -118,7 +112,6 @@ const PassengerInformation = () => {
     (booking.adults * adultPrice) +
     (booking.children * childPrice) +
     (booking.babies * babyPrice);
-
   const finalPayment = booking.paymentType === "full" ? total : total / 2;
   return (
     <div className="px-[80px] pt-[620px] pb-20 bg-gradient-to-b from-blue-50 to-white min-h-screen">

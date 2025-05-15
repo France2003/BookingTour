@@ -34,7 +34,6 @@ const ReviewSection = ({ tourId, existingReviews = [] }: { tourId: string; exist
                 console.error("Lỗi khi lấy tên người dùng từ API", err);
             }
         };
-
         fetchUserName();
     }, []);
     const handleSubmitReview = async () => {
@@ -59,7 +58,6 @@ const ReviewSection = ({ tourId, existingReviews = [] }: { tourId: string; exist
     return (
         <div className="mt-10">
             <h2 className="text-2xl font-bold mb-4">Đánh giá & Bình luận</h2>
-
             <div className="space-y-4 mb-6">
                 {reviews.length > 0 ? (
                     reviews.map((review, index) => (

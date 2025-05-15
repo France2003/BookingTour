@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-
 export interface AuthRequest extends Request {
     user?: { id: string; role: string };
 }
-
 // Middleware kiểm tra token
 export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
     const authHeader = req.header("Authorization");

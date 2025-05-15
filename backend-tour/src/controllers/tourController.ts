@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import Tour from "../models/Tour";
-
 // ✅ Lấy danh sách tour
 export const getTours = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -30,7 +29,6 @@ export const getTours = async (req: Request, res: Response): Promise<void> => {
                 { destination: new RegExp(search as string, "i") }, // tìm theo nơi đến
             ];
         }
-
         // ✅ Lấy danh sách tour theo bộ lọc và sắp xếp theo thời gian tạo
         const tours = await Tour.find(filter).sort({ createdAt: -1 });
 

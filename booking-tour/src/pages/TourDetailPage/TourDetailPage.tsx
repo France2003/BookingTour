@@ -44,7 +44,7 @@ const TourDetail = () => {
           alt={tour.title}
           className="w-full h-[400px] object-cover rounded-lg shadow-lg mb-8"
         />
-        <span className="text-white bg-[#FF002C] -mt-[15px] px-3 p-2 rounded">Giảm 700.000đ/khách</span>
+        {/* <span className="text-white bg-[#FF002C] -mt-[15px] px-3 p-2 rounded">Giảm 700.000đ/khách</span> */}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-700 text-lg">
         <p><FaClock className="inline-block mr-2 text-black" /> <strong>Thời gian:</strong> {tour.duration}</p>
@@ -148,7 +148,6 @@ const TourDetail = () => {
         )}
 
       </div>
-      {/* Tour liên quan */}
       <div>
         <RelatedTours currentRegion={tour.region} />
       </div>

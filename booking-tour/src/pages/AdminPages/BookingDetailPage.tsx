@@ -21,7 +21,7 @@ interface Booking {
     }[];
     tourId: {
         tour: string;
-        tourCode: string; // Thêm mô tả tour nếu có
+        tourCode: string;
         location: string;
         startDate: Date;
         endDate: Date;

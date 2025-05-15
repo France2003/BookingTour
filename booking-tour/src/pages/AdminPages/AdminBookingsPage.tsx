@@ -32,7 +32,6 @@ const AdminBookingsPage = () => {
             try {
                 const response = await axios.get("http://localhost:3001/api/bookings");
                 const allBookings = response.data;
-
                 if (Array.isArray(allBookings)) {
                     const paidBookings = allBookings.filter(
                         (booking: any) =>
@@ -52,7 +51,6 @@ const AdminBookingsPage = () => {
                 setLoading(false);
             }
         };
-
         fetchBookings();
     }, []);
     const showDeleteConfirm = (id: string) => {

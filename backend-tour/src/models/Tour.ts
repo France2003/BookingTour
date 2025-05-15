@@ -29,7 +29,6 @@ export interface ITour extends Document {
     program: IProgram[]; // Chương trình tour
     // services: IService[]; // Dịch vụ kèm theo
 }
-
 const TourSchema = new Schema<ITour>(
     {
         title: { type: String, required: true },
@@ -75,16 +74,8 @@ const TourSchema = new Schema<ITour>(
                 day: { type: Number, required: true },
                 activities: [{ type: String, required: true }],
             },
-        ], // Chương trình tour
-        // services: [
-        //     {
-        //         name: { type: String, required: true },
-        //         description: { type: String, required: true },
-        //     },
-        // ], // Dịch vụ kèm theo
+        ], 
     },
-
     { timestamps: true }
 );
-
 export default mongoose.model<ITour>("Tour", TourSchema);

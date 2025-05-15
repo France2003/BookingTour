@@ -71,8 +71,6 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         // ✅ Kiểm tra nếu email là ADMIN_EMAIL thì gán role là "admin"
         const isAdmin = email === process.env.ADMIN_EMAIL;
         const role = isAdmin ? "admin" : "user";
-
-        // ✅ Tạo token chứa role và thay đổi thời gian hết hạn lên hơn 15 ngày, ví dụ là 30 ngày
         const token = jwt.sign(
             { id: user._id, role },
             process.env.JWT_SECRET,

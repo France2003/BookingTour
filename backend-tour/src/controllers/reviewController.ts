@@ -12,7 +12,6 @@ export const addReview = async (req: Request, res: Response): Promise<void> => {
        return 
     } 
     tour.reviews.push({ user, comment, rating });
-    // Cập nhật điểm đánh giá trung bình
     const total = (tour.reviews || []).reduce((acc, curr) => acc + curr.rating, 0);
     tour.rating = total / tour.reviews.length;
 
