@@ -8,7 +8,6 @@ export default function ViewTour() {
     const { id } = useParams(); // Lấy tourId từ URL
     const [tour, setTour] = useState<any>(null);
     const [loading, setLoading] = useState(true);
-    const [reviews, setReviews] = useState<any[]>([]);
     useEffect(() => {
         const fetchTour = async () => {
             try {

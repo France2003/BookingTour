@@ -1,6 +1,4 @@
-import { view } from "framer-motion";
 import { useParams } from "react-router-dom";
-
 const destinations = [
   {
     slug: "ha-giang-noi-da-no-hoa",

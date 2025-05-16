@@ -74,17 +74,6 @@ export default function TourManagement() {
       }
     }
   }
-
-  async function updateTourStatus(tourId: string, status: Tour["status"]) {
-    try {
-      await axios.patch(`/api/tours/${tourId}/status`, { status });
-      message.success("Cập nhật trạng thái tour thành công!");
-      fetchTours();
-    } catch (error) {
-      message.error("Lỗi khi cập nhật trạng thái tour!");
-    }
-  }
-
   const filteredTours = tours.filter((tour) =>
     tour.title.toLowerCase().includes(search.toLowerCase())
   );

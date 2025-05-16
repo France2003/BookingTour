@@ -1,6 +1,4 @@
-import React from "react";
 import "./Loader.css"; // Import file CSS
-
 const Loader = () => {
   return (
     <div className="fixed inset-0 z-[9999]  flex items-center justify-center">

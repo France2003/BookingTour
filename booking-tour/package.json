@@ -37,7 +37,7 @@
     "react-toastify": "^11.0.3",
     "recharts": "^2.15.1",
     "spinners": "^1.2.2",
-    "swiper": "^11.2.5",
+    "swiper": "^11.2.6",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.0.8",
     "yup": "^1.6.1"

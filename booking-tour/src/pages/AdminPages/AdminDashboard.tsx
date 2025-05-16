@@ -28,8 +28,8 @@ export default function AdminDashboard() {
     revenueData: [],
   });
 
-  const maxRevenue = Math.max(...stats.revenueData.map((d) => d.totalRevenue), 0);
-  const roundedMax = Math.ceil(maxRevenue / 10000000) * 10000000 || 10000000; // Tránh 0
+  // const maxRevenue = Math.max(...stats.revenueData.map((d) => d.totalRevenue), 0);
+  // const roundedMax = Math.ceil(maxRevenue / 10000000) * 10000000 || 10000000; // Tránh 0
 
   axios.interceptors.response.use(
     (response) => response,

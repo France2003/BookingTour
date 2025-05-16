@@ -4,9 +4,8 @@ import axios from "axios";
 import Timeline from "../../components/Timeline/Timeline";
 import { FaUser, FaChild, FaBaby } from "react-icons/fa";
 import { MdCalendarToday, MdAccessTime, MdConfirmationNumber } from "react-icons/md";
-import Checkbox, { CheckboxProps } from "antd/es/checkbox/Checkbox";
+import Checkbox from "antd/es/checkbox/Checkbox";
 import { Helmet } from "react-helmet";
-
 const CustomerInfoForm = () => {
     const { id } = useParams();
     const history = useNavigate();
@@ -93,10 +92,7 @@ const CustomerInfoForm = () => {
     const handleSelectPaymentMethod = async (method: string) => {
         setSelectedPaymentMethod(method);
     };
-    const onChange: CheckboxProps['onChange'] = (e: any) => {
-        console.log(`checked = ${e.target.checked}`);
-        setIsAgreed(e.target.checked);
-    };
+
     useEffect(() => {
         const fetchTour = async () => {
             try {

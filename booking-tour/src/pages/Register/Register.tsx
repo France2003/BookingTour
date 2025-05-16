@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import {useState, useCallback } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -12,7 +12,6 @@ function Register({ url }: { url: string }) {
     const [email, setEmail] = useState("");
     const [sdt, setSdt] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -39,7 +38,8 @@ function Register({ url }: { url: string }) {
             setLoading(false);
             return;
         }
-
+        console.log(url);
+        
         try {
             const response = await axios.post(`http://localhost:3001/api/auth/register`, { 
                 phone: sdt, 

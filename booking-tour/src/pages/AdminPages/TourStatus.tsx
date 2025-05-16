@@ -13,16 +13,13 @@ interface TourStatusProps {
 function TourStatus({ tourId, currentStatus }: TourStatusProps) {
     // Khai báo state để theo dõi trạng thái hiện tại
     const [status, setStatus] = useState<'active' | 'booked' | 'completed'>(currentStatus);
-
     // Xử lý thay đổi trạng thái
     const handleStatusChange = async (newStatus: 'active' | 'booked' | 'completed') => {
         try {
             // Gửi yêu cầu PATCH để cập nhật trạng thái
-            const response = await axios.patch(`/api/tours/${tourId}/status`, { status: newStatus });
-
+            await axios.patch(`/api/tours/${tourId}/status`, { status: newStatus });
             // Cập nhật trạng thái mới vào state
             setStatus(newStatus);
-
             notification.success({
                 message: 'Cập nhật trạng thái',
                 description: `Tour đã được cập nhật trạng thái thành ${newStatus}`,

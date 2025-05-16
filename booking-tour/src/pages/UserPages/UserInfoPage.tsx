@@ -49,11 +49,12 @@ const UserInfoPage = () => {
   const [form] = Form.useForm();
   const [userId, setUserId] = useState("");
   const [bookings, setBookings] = useState<IBooking[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userData, setUserData] = useState<IUser | null>(null);
   useEffect(() => {
     fetchUser();
   }, []);
-
+  console.log(userData);
   const fetchUser = async () => {
     try {
       const storedEmail = localStorage.getItem("userEmail");

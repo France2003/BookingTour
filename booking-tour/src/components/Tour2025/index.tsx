@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 const TourNew = () => {
     const prevRef = useRef<HTMLButtonElement | null>(null);
     const nextRef = useRef<HTMLButtonElement | null>(null);
-    const [swiperInstance, setSwiperInstance] = useState<any>(null);
+    const [swiperInstance] = useState<any>(null);
     const [tours, setTours] = useState<any[]>([]); // State to store tours fetched from the API
 
     // Fetch tours from the API using axios

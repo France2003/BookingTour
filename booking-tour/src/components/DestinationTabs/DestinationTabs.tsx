@@ -95,7 +95,7 @@ export default function DestinationTabs() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 <AnimatePresence mode="wait"> {/* ✨ thêm AnimatePresence */}
-                    {destinations[region].map((place, index) => (
+                    {destinations[region].map((place) => (
                         <motion.div
                             key={place.name}
                             initial={{ opacity: 0, scale: 0.8 }}

@@ -6,16 +6,17 @@ import { FcGoogle } from "react-icons/fc";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 function Login({ url }: { url: string }) {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [isPageLoading, setIsPageLoading] = useState(false);
     const [fadeIn, setFadeIn] = useState(false);
     const navigate = useNavigate();
-
+    console.log(url);
+    console.log(isPageLoading);
     useEffect(() => {
         setFadeIn(true);
     }, []);
@@ -58,9 +59,7 @@ function Login({ url }: { url: string }) {
             setIsLoading(false);
         }
     };
-    
-
-    // ✅ Hàm làm mới token khi access token hết hạn
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const refreshToken = async () => {
         try {
             const storedRefreshToken = localStorage.getItem("refreshToken");
@@ -88,7 +87,7 @@ function Login({ url }: { url: string }) {
             window.location.href = "/login"; 
         }
     };
-
+    console.log(refreshToken);
     return (
         <div className={`login min-h-screen flex items-center justify-center text-black bg-gray-900 transition-opacity duration-1000 ${fadeIn ? "opacity-100" : "opacity-0"}`}>
             <Helmet>

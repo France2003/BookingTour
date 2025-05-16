@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "antd";
 import { CheckCircle } from "lucide-react";
@@ -11,7 +11,8 @@ const SuccessPaymentPage = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const { id } = useParams();
     const navigate = useNavigate();
-
+    console.log(paymentDetails);
+    console.log(loading);
     useEffect(() => {
         // Kiểm tra API và lấy thông tin thanh toán
         axios

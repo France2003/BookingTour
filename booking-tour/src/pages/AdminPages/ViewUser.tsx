@@ -105,7 +105,7 @@ const ViewUser: React.FC = () => {
           </div>
         ) : bookings.length > 0 ? (
           <ul className="space-y-4">
-            {bookings.map((booking, index) => {
+            {bookings.map((booking) => {
               const tour = booking.tourId;
               return (
                 <li key={booking._id} className="border p-4 rounded-md shadow-sm">

@@ -103,7 +103,7 @@ export default function EditTourForm() {
 
             delete formattedValues.extraImages; // 👈 Xoá để không gửi sai cấu trúc
 
-            const response = await axios.put(`http://localhost:3001/api/tours/${id}`, formattedValues, {
+            await axios.put(`http://localhost:3001/api/tours/${id}`, formattedValues, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
